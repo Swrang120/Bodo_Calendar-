@@ -39,6 +39,7 @@ import com.example.ui.components.LiveHistoryTicker
 import com.example.ui.components.MonthExplanationDialog
 import com.example.ui.components.ThreeDayForecastCard
 import com.example.ui.theme.AronaiGold
+import com.example.ui.theme.AronaiGoldLight
 import com.example.ui.theme.AronaiNavy
 import com.example.ui.theme.AronaiTextSecondary
 import com.example.ui.theme.MyApplicationTheme
@@ -178,10 +179,19 @@ fun CulturalFooter(modifier: Modifier = Modifier) {
       fontWeight = FontWeight.Bold
     )
 
+    Spacer(modifier = Modifier.height(3.dp))
+
     Text(
-      text = "12:00 AM Midnight Lifetime Auto-Rollover Active • Live Research Sync",
+      text = "Developed by Swrang Swargiary",
+      color = AronaiGoldLight,
+      fontSize = 11.sp,
+      fontWeight = FontWeight.SemiBold
+    )
+
+    Text(
+      text = "Preserving Bodoland Heritage • Support: sboro3235@gmail.com",
       color = AronaiTextSecondary,
-      fontSize = 10.sp
+      fontSize = 9.5.sp
     )
   }
 }

@@ -1075,6 +1075,52 @@
       color: var(--aronai-gold-light);
       margin-bottom: 10px;
     }
+
+    /* Bottom Page Footer (Developer Credit) */
+    .app-footer {
+      margin-top: 36px;
+      margin-bottom: 24px;
+      padding: 20px 14px;
+      text-align: center;
+      border-top: 1px solid rgba(245, 158, 11, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .footer-logo {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 1px solid var(--aronai-gold);
+    }
+    .footer-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--aronai-gold);
+      letter-spacing: 0.5px;
+    }
+    .footer-credit {
+      font-size: 12px;
+      color: #CBD5E1;
+      letter-spacing: 0.3px;
+    }
+    .footer-credit strong {
+      color: var(--aronai-gold-light);
+      font-weight: 800;
+    }
+    .footer-subtext {
+      font-size: 10.5px;
+      color: #64748B;
+      max-width: 420px;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -1155,7 +1201,10 @@
       </div>
 
       <div class="sidebar-footer-info">
-        <span>Bodo Calendar 2026 • Support: <strong>sboro3235@gmail.com</strong></span>
+        <div>Bodo Calendar 2026 • Support: <strong>sboro3235@gmail.com</strong></div>
+        <div style="margin-top: 5px; font-size: 11px; color: #94A3B8;">
+          Developed by <strong style="color: var(--aronai-gold);">Swrang Swargiary</strong>
+        </div>
       </div>
     </div>
   </aside>
@@ -1322,6 +1371,20 @@
     <div class="ticker-container" id="news-container">
       <!-- Generated dynamically -->
     </div>
+
+    <!-- Bottom Page Footer (Developer Credit) -->
+    <footer class="app-footer">
+      <div class="footer-brand">
+        <img src="img_app_icon.jpg" alt="Bodo Calendar Logo" class="footer-logo">
+        <span class="footer-title">Bodo San Solar Calendar 2026</span>
+      </div>
+      <div class="footer-credit">
+        Developed by <strong>Swrang Swargiary</strong>
+      </div>
+      <div class="footer-subtext">
+        Preserving Bodoland Cultural Heritage & Bathou Traditions • Support: sboro3235@gmail.com
+      </div>
+    </footer>
 
   </div>
 
