@@ -1084,6 +1084,9 @@
       border-radius: 12px;
       padding: 12px 8px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .ad-slot-label {
       font-size: 9px;
@@ -1094,7 +1097,9 @@
       text-transform: uppercase;
     }
     .ad-slot-box {
-      min-height: 55px;
+      min-height: 250px;
+      width: 100%;
+      max-width: 320px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1103,16 +1108,46 @@
       border-radius: 8px;
       border: 1px dashed rgba(245, 158, 11, 0.3);
       padding: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ad-direct-card {
+      display: block;
+      text-decoration: none;
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(220, 38, 38, 0.15));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 16px 20px;
+      width: 100%;
+      box-sizing: border-box;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .ad-direct-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.2);
     }
     .ad-slot-text {
-      font-size: 12px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--aronai-gold-light);
+      margin-bottom: 4px;
     }
     .ad-slot-subtext {
-      font-size: 10px;
+      font-size: 11px;
       color: #94A3B8;
-      margin-top: 2px;
+      margin-bottom: 10px;
+    }
+    .ad-cta-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #F59E0B, #DC2626);
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     /* Bottom Page Footer (Developer Credit) */
@@ -1411,12 +1446,30 @@
       <!-- Generated dynamically -->
     </div>
 
-    <!-- Sponsored / Ad Space Container -->
+    <!-- Sponsored / Ad Space Container (Adsterra & Direct Monetization) -->
     <div class="ad-banner-slot" id="app-ad-slot">
       <div class="ad-slot-label">Sponsored Advertisement</div>
-      <div class="ad-slot-box">
-        <div class="ad-slot-text">📢 Google Ads / Sponsor Space</div>
-        <div class="ad-slot-subtext">Banner ID: ca-app-pub-3120006032488545/7506284998</div>
+      <div class="ad-slot-box" id="adsterra-banner-container">
+        <!-- Adsterra 300x250 Banner Script -->
+        <script type="text/javascript">
+          atOptions = {
+            'key' : '0a4d0cbe1cdd4f8562eafeb9e8dbcbb2',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script type="text/javascript" src="//www.topcreativeformat.com/0a4d0cbe1cdd4f8562eafeb9e8dbcbb2/invoke.js"></script>
+
+        <!-- Direct Link Card & Fallback (Guaranteed Clicks & Earning) -->
+        <div style="margin-top: 10px; width: 100%;">
+          <a href="https://ensueddenied.com/nxd0j2dj?key=0a4d0cbe1cdd4f8562eafeb9e8dbcbb2" target="_blank" rel="noopener noreferrer" class="ad-direct-card">
+            <div class="ad-slot-text">✨ Special Offers & Partner Stories</div>
+            <div class="ad-slot-subtext">Tap here to explore trending cultural news & rewards</div>
+            <span class="ad-cta-btn">Visit Sponsor ↗</span>
+          </a>
+        </div>
       </div>
     </div>
 
