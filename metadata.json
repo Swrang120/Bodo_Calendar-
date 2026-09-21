@@ -1,0 +1,6 @@
+{
+  "name": "Bodo Calendar",
+  "description": "Authentic Bodo & English Calendar with live historical updates, Assamese solar calendar sync, Bagurumba visual theme, Aronai color system, and midnight dynamic date rollover.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
