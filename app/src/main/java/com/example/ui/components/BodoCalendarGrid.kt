@@ -269,7 +269,7 @@ fun BodoDayCell(
   onClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
-  val isSunday = date.dayOfWeekBodo == "Deobar"
+  val isSunday = date.dayOfWeekEng == "Sunday" || date.dayOfWeekBodo == "Rabibar" || date.dayOfWeekBodo == "Deobar"
 
   Box(
     modifier = modifier

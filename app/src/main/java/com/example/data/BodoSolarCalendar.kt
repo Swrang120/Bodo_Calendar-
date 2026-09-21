@@ -18,18 +18,18 @@ enum class BodoMonth(
   val seasonEnglish: String,
   val totalDays: Int
 ) {
-  BWISAGU(1, "Bwisagu", "बैसागु", "Mid-April to Mid-May", "Bwisag / Bwisagu", "Spring (Basanta)", 31),
-  JETH(2, "Jeth", "जेथ", "Mid-May to Mid-June", "Gwiswm", "Summer (Grishma)", 31),
-  AHAR(3, "Ahar", "आहार", "Mid-June to Mid-July", "Barikha", "Monsoon (Barsha)", 31),
-  SAON(4, "Saon", "साओन", "Mid-July to Mid-August", "Barikha", "Monsoon (Barsha)", 31),
-  BHADO(5, "Bhado", "भादो", "Mid-August to Mid-September", "Barikha", "Monsoon (Barsha)", 31),
-  AHIN(6, "Ahin", "आहिन", "Mid-September to Mid-October", "Swrwt", "Autumn (Sharad)", 30),
-  KATI(7, "Kati", "काति", "Mid-October to Mid-November", "Swrwt", "Autumn (Sharad)", 30),
-  AGON(8, "Agon", "आगोन", "Mid-November to Mid-December", "Hemanta", "Late Autumn (Hemanta)", 30),
-  PUH(9, "Puh", "पूह", "Mid-December to Mid-January", "Gajang", "Winter (Shita)", 30),
-  MAGH(10, "Magh", "माघ", "Mid-January to Mid-February", "Gajang", "Winter (Shita)", 30),
+  BWISAGU(1, "Bwisag", "बैसाग (बैसागु)", "Mid-April to Mid-May", "Bwisag / Bwisagu", "Spring (Basanta)", 31),
+  JETH(2, "Jeth", "जेथो (जेथ)", "Mid-May to Mid-June", "Gwiswm", "Summer (Grishma)", 31),
+  AHAR(3, "Aasar", "आसार (आहार)", "Mid-June to Mid-July", "Barikha", "Monsoon (Barsha)", 31),
+  SAON(4, "Sawan", "सावन (साओन)", "Mid-July to Mid-August", "Barikha", "Monsoon (Barsha)", 31),
+  BHADO(5, "Bhadra", "भाद्र (भादो)", "Mid-August to Mid-September", "Barikha", "Monsoon (Barsha)", 31),
+  AHIN(6, "Aasin", "आसिन (आहिन)", "Mid-September to Mid-October", "Swrwt", "Autumn (Sharad)", 30),
+  KATI(7, "Kati", "खाथि (काति)", "Mid-October to Mid-November", "Swrwt", "Autumn (Sharad)", 30),
+  AGON(8, "Aghon", "आघन (आगोन)", "Mid-November to Mid-December", "Hemanta", "Late Autumn (Hemanta)", 30),
+  PUH(9, "Push", "पुष (पूह)", "Mid-December to Mid-January", "Gajang", "Winter (Shita)", 30),
+  MAGH(10, "Magh", "माघ (माघ्व)", "Mid-January to Mid-February", "Gajang", "Winter (Shita)", 30),
   FAGUN(11, "Fagun", "फागुन", "Mid-February to Mid-March", "Gwiswm-Bwisag", "Late Winter / Spring", 30),
-  SOT(12, "Sot", "सत", "Mid-March to Mid-April", "Bwisag", "Spring (Basanta)", 30);
+  SOT(12, "Chaitra", "चैत्र (सत)", "Mid-March to Mid-April", "Bwisag", "Spring (Basanta)", 30);
 
   companion object {
     fun fromIndex(idx: Int): BodoMonth {
@@ -55,27 +55,29 @@ data class BodoDate(
 
 object BodoSolarCalendar {
 
-  // Days of week in Bodo & English
-  val WEEKDAYS_BODO = listOf("Deobar", "Sombar", "Mongolbar", "Budbar", "Birehbar", "Sukrubar", "Sonibar")
-  val WEEKDAYS_BODO_SHORT = listOf("Deo", "Som", "Mon", "Bud", "Bir", "Suk", "Soni")
+  // Days of week in Bodo & English (matching Bodoland & Bodopedia traditional terms)
+  val WEEKDAYS_BODO = listOf("Rabibar", "Sombar", "Mongolbar", "Budhbar", "Brihospatibar", "Sakrubar", "Shanibar")
+  val WEEKDAYS_BODO_SHORT = listOf("Rabi", "Som", "Mongol", "Budh", "Brihos", "Sakru", "Shani")
   val WEEKDAYS_ENG_SHORT = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
-  // Approximate Sankranti (Solar month transition day in Gregorian calendar)
+  // Traditional Solar Sankranti / Month Transition Day in Gregorian Calendar
   // month 1 = Jan, 2 = Feb, ... 12 = Dec
+  // For 2026 (Assamese/Bhaskarabda & Bodo Solar Calendar):
+  // Ahin/Aasin begins on September 19, meaning Sep 19 = 1, Sep 20 = 2, Sep 21 = 3!
   private fun getSankrantiDay(gregorianMonth: Int, year: Int): Int {
     return when (gregorianMonth) {
-      1 -> 14  // Jan 14 -> Magh 1 (Domasi/Magh Bihu)
-      2 -> 13  // Feb 13 -> Fagun 1
-      3 -> 15  // Mar 15 -> Sot 1
-      4 -> 14  // Apr 14 -> Bwisagu 1 (Bodo New Year)
+      1 -> 15  // Jan 15 -> Magh 1 (Domasi/Magh Bihu)
+      2 -> 14  // Feb 14 -> Fagun 1
+      3 -> 15  // Mar 15 -> Chaitra/Sot 1
+      4 -> 14  // Apr 14 -> Bwisag 1 (Bodo New Year)
       5 -> 15  // May 15 -> Jeth 1
-      6 -> 15  // Jun 15 -> Ahar 1
-      7 -> 16  // Jul 16 -> Saon 1
-      8 -> 17  // Aug 17 -> Bhado 1
-      9 -> 17  // Sep 17 -> Ahin 1
-      10 -> 17 // Oct 17 -> Kati 1
-      11 -> 16 // Nov 16 -> Agon 1
-      12 -> 16 // Dec 16 -> Puh 1
+      6 -> 16  // Jun 16 -> Aasar/Ahar 1
+      7 -> 17  // Jul 17 -> Sawan/Saon 1
+      8 -> 18  // Aug 18 -> Bhadra/Bhado 1
+      9 -> 19  // Sep 19 -> Aasin/Ahin 1 (Sep 19 = 1, Sep 20 = 2, Sep 21 = 3)
+      10 -> 18 // Oct 18 -> Kati 1
+      11 -> 17 // Nov 17 -> Aghon/Agon 1
+      12 -> 16 // Dec 16 -> Push/Puh 1
       else -> 15
     }
   }
