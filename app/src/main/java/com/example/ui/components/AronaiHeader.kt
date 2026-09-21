@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,6 +55,7 @@ fun AronaiHeader(
   onOpenMonthInfo: () -> Unit,
   onOpenAdminPanel: () -> Unit,
   onOpenAppDownload: () -> Unit,
+  onOpenSidebar: () -> Unit = {},
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier.fillMaxWidth()) {
@@ -62,15 +64,33 @@ fun AronaiHeader(
       modifier = Modifier
         .fillMaxWidth()
         .background(AronaiNavy)
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+        .padding(horizontal = 14.dp, vertical = 12.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
+        // Hamburger Menu button (Opens Sidebar Drawer)
+        IconButton(
+          onClick = onOpenSidebar,
+          modifier = Modifier
+            .size(38.dp)
+            .clip(CircleShape)
+            .background(AronaiSurface)
+        ) {
+          Icon(
+            imageVector = Icons.Default.Menu,
+            contentDescription = "Open Sidebar Menu",
+            tint = AronaiGold,
+            modifier = Modifier.size(22.dp)
+          )
+        }
+
+        Spacer(modifier = Modifier.width(8.dp))
+
         // Aronai motif badge
         Box(
           modifier = Modifier
-            .size(42.dp)
+            .size(38.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(AronaiGold)
             .border(1.5.dp, AronaiRed, RoundedCornerShape(10.dp)),
@@ -79,23 +99,23 @@ fun AronaiHeader(
           Image(
             painter = painterResource(id = R.drawable.img_app_icon),
             contentDescription = "Bodo Calendar Icon",
-            modifier = Modifier.size(38.dp),
+            modifier = Modifier.size(34.dp),
             contentScale = ContentScale.Crop
           )
         }
-        Spacer(modifier = Modifier.width(10.dp))
+        Spacer(modifier = Modifier.width(8.dp))
         Column {
           Text(
-            text = "BODO SAN CALENDAR",
+            text = "BODO SAN",
             color = AronaiGold,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             fontWeight = FontWeight.Black,
             letterSpacing = 0.5.sp
           )
           Text(
-            text = "बड़ो सान • Traditional Solar Calendar",
+            text = "बड़ो सान • Solar 2026",
             color = AronaiWarmWhite.copy(alpha = 0.8f),
-            fontSize = 11.sp,
+            fontSize = 10.sp,
             fontWeight = FontWeight.Medium
           )
         }
