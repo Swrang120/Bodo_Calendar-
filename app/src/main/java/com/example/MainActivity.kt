@@ -37,6 +37,7 @@ import com.example.ui.components.AppDownloadDialog
 import com.example.ui.components.AronaiHeader
 import com.example.ui.components.BodoCalendarGrid
 import com.example.ui.components.LiveHistoryTicker
+import com.example.ui.components.LiveMetricsBar
 import com.example.ui.components.MonthExplanationDialog
 import com.example.ui.components.ThreeDayForecastCard
 import com.example.ui.theme.AronaiGold
@@ -126,7 +127,12 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.testTag("admob_banner_ad")
               )
 
-              // 6. Cultural Footer with Traditional Aronai Banner
+              // 6. Live App Downloads & Active Users Metrics
+              LiveMetricsBar(
+                modifier = Modifier.testTag("live_metrics_bar")
+              )
+
+              // 7. Cultural Footer with Traditional Aronai Banner
               CulturalFooter(modifier = Modifier.testTag("cultural_footer"))
 
               Spacer(modifier = Modifier.height(24.dp))
