@@ -1518,8 +1518,12 @@
 
       document.getElementById('nav-eng-title').textContent = `${ENG_MONTH_NAMES[displayedMonth - 1]} ${displayedYear} (English)`;
       
-      const midMonthBodo = getBodoDate(new Date(displayedYear, displayedMonth - 1, 15));
-      document.getElementById('nav-bodo-title').textContent = `${midMonthBodo.bMonthName} (${midMonthBodo.bYear} B.S.)`;
+      // Active Bodo Month matching selected date (e.g. Aasin for Sep 21)
+      const activeBodo = (selectedDate.getMonth() + 1 === displayedMonth && selectedDate.getFullYear() === displayedYear)
+        ? getBodoDate(selectedDate)
+        : getBodoDate(new Date(displayedYear, displayedMonth - 1, 21));
+
+      document.getElementById('nav-bodo-title').innerHTML = `${activeBodo.bMonthName} <span style="font-size: 13px; font-weight: 700; color: var(--aronai-gold-light);">(${activeBodo.bDevName})</span> • ${activeBodo.bYear} B.S.`;
 
       const today = new Date(2026, 8, 21);
 
@@ -1585,7 +1589,14 @@
         displayedMonth = 1;
         displayedYear++;
       }
+      const today = new Date(2026, 8, 21);
+      if (today.getMonth() + 1 === displayedMonth && today.getFullYear() === displayedYear) {
+        selectedDate = today;
+      } else {
+        selectedDate = new Date(displayedYear, displayedMonth - 1, 21);
+      }
       renderCalendar();
+      updateDetectionCard(selectedDate);
     }
 
     // Default News items

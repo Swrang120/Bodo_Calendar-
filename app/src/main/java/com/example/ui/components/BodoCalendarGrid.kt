@@ -113,17 +113,17 @@ fun BodoCalendarGrid(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.clickable { onOpenMonthInfo() }
       ) {
-        // Prominent Bodo Month
+        // Prominent Bodo Month (Matches selected date e.g. Aasin)
         Row(verticalAlignment = Alignment.CenterVertically) {
           Text(
-            text = if (firstBodoMonth == lastBodoMonth) firstBodoMonth else "$firstBodoMonth - $lastBodoMonth",
+            text = "${selectedDate.bodoMonth.bodoName} (${selectedDate.bodoMonth.devanagariName})",
             color = AronaiGold,
             fontSize = 17.sp,
             fontWeight = FontWeight.Black
           )
           Spacer(modifier = Modifier.width(4.dp))
           Text(
-            text = "(${monthDays.firstOrNull()?.bodoYear ?: 1433} B.S.)",
+            text = "(${selectedDate.bodoYear} B.S.)",
             color = AronaiGoldLight,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
