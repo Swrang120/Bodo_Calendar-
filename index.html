@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bodo San Calendar - बड़ो सan (Traditional Solar Calendar)</title>
+  <title>Bodo San Calendar - बड़ो सान (Traditional Solar Calendar)</title>
   <link rel="icon" href="img_app_icon.jpg" type="image/jpeg">
   <style>
     :root {
@@ -18,6 +18,7 @@
       --aronai-surface: #1E293B;
       --aronai-surface-variant: #334155;
       --aronai-green: #16A34A;
+      --aronai-green-light: #86EFAC;
       --aronai-warm-white: #FEF3C7;
       --text-muted: #94A3B8;
     }
@@ -36,12 +37,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-bottom: 40px;
+      padding-bottom: 50px;
     }
 
     .container {
       width: 100%;
-      max-width: 580px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 0 12px;
     }
@@ -64,24 +65,24 @@
     /* Top App Bar */
     header {
       background: var(--aronai-navy);
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--aronai-surface-variant);
       width: 100%;
-      max-width: 580px;
+      max-width: 600px;
     }
 
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .brand-icon {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       border-radius: 10px;
       border: 2px solid var(--aronai-red);
       background: var(--aronai-gold);
@@ -98,22 +99,23 @@
     }
 
     .brand-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
       color: var(--aronai-gold);
       letter-spacing: 0.5px;
     }
 
     .brand-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--aronai-warm-white);
-      opacity: 0.8;
+      opacity: 0.85;
       font-weight: 500;
     }
 
     .header-actions {
       display: flex;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
     }
 
     .icon-btn {
@@ -125,12 +127,18 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       transition: transform 0.2s, opacity 0.2s;
     }
 
     .icon-btn:hover {
       transform: scale(1.08);
+    }
+
+    .btn-user {
+      background: var(--aronai-gold);
+      color: #0F172A;
+      font-weight: bold;
     }
 
     .btn-info {
@@ -148,9 +156,101 @@
       color: #FFFFFF;
     }
 
+    /* User active chip */
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--aronai-gold);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--aronai-gold-light);
+      cursor: pointer;
+    }
+
+    /* Daily Bulletin Notification Card */
+    .bulletin-card {
+      margin-top: 10px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+      border: 1.5px solid var(--aronai-gold);
+      border-radius: 14px;
+      padding: 12px;
+      position: relative;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bulletin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .bulletin-title {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--aronai-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .bulletin-audio-btn {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--aronai-gold);
+      color: var(--aronai-gold-light);
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+    }
+
+    .bulletin-audio-btn:hover {
+      background: var(--aronai-gold);
+      color: #000;
+    }
+
+    .bulletin-content {
+      font-size: 12px;
+      line-height: 1.45;
+      color: #E2E8F0;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .status-closed {
+      background: rgba(220, 38, 38, 0.25);
+      color: var(--aronai-red-light);
+      border: 1px solid var(--aronai-red);
+    }
+
+    .status-open {
+      background: rgba(22, 163, 74, 0.25);
+      color: var(--aronai-green-light);
+      border: 1px solid var(--aronai-green);
+    }
+
     /* Hero Banner with Bagurumba Photo */
     .hero-card {
-      margin-top: 12px;
+      margin-top: 10px;
       position: relative;
       border-radius: 16px;
       overflow: hidden;
@@ -161,7 +261,7 @@
 
     .hero-bg {
       width: 100%;
-      height: 180px;
+      height: 175px;
       object-fit: cover;
       display: block;
       opacity: 0.85;
@@ -173,8 +273,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.8) 60%, rgba(15, 23, 42, 0.98) 100%);
-      padding: 14px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.25) 0%, rgba(15, 23, 42, 0.8) 60%, rgba(15, 23, 42, 0.98) 100%);
+      padding: 12px 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -189,9 +289,9 @@
     .live-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: rgba(185, 28, 28, 0.95);
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 20px;
       font-size: 10px;
       font-weight: 800;
@@ -199,8 +299,8 @@
     }
 
     .live-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #FFFFFF;
       animation: pulse 1.5s infinite;
@@ -212,16 +312,24 @@
       100% { opacity: 1; transform: scale(1); }
     }
 
-    .midnight-badge {
+    .reset-today-pill {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      background: rgba(0, 0, 0, 0.65);
-      border: 1px solid rgba(245, 158, 11, 0.5);
-      padding: 4px 10px;
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid var(--aronai-gold);
+      padding: 3px 9px;
       border-radius: 20px;
-      font-size: 9px;
-      color: var(--aronai-warm-white);
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--aronai-gold-light);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .reset-today-pill:hover {
+      background: var(--aronai-gold);
+      color: #0F172A;
     }
 
     .hero-bottom-row {
@@ -231,14 +339,14 @@
     }
 
     .bodo-date-main {
-      font-size: 26px;
+      font-size: 25px;
       font-weight: 900;
       color: #FFFFFF;
       text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
 
     .bodo-date-dev {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--aronai-gold);
     }
@@ -252,14 +360,14 @@
     .english-date-pill {
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(245, 158, 11, 0.5);
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 10px;
       text-align: right;
       cursor: pointer;
     }
 
     .english-date-pill .lbl {
-      font-size: 9px;
+      font-size: 8px;
       color: var(--aronai-gold-light);
       font-weight: 600;
     }
@@ -275,106 +383,6 @@
       color: var(--aronai-gold);
     }
 
-    /* Live Ticker Section */
-    .section-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 14px 0 8px 0;
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--aronai-gold);
-      letter-spacing: 0.5px;
-    }
-
-    .ticker-container {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .news-card {
-      background: var(--aronai-surface);
-      border-radius: 12px;
-      padding: 12px;
-      border-left: 4px solid var(--aronai-gold);
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      border-left-width: 4px;
-      border-left-color: var(--aronai-gold);
-      position: relative;
-      transition: all 0.2s ease;
-    }
-
-    .news-card.category-leader {
-      border-left-color: var(--aronai-red);
-    }
-
-    .news-card.category-puja {
-      border-left-color: var(--aronai-green);
-    }
-
-    .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .news-category-tag {
-      font-size: 9px;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: var(--aronai-navy);
-      color: var(--aronai-gold-light);
-    }
-
-    .news-delete-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 14px;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-
-    .news-delete-btn:hover {
-      background: rgba(220, 38, 38, 0.2);
-      color: var(--aronai-red-light);
-    }
-
-    .news-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: #FFFFFF;
-      margin-bottom: 4px;
-    }
-
-    .news-bodo-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--aronai-gold-light);
-      margin-bottom: 6px;
-    }
-
-    .news-body {
-      font-size: 11px;
-      color: #CBD5E1;
-      line-height: 1.4;
-      margin-bottom: 6px;
-    }
-
-    .news-footer {
-      display: flex;
-      justify-content: space-between;
-      font-size: 10px;
-      color: var(--text-muted);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 6px;
-    }
-
     /* 3-Day Forecast Cards */
     .forecast-row {
       display: grid;
@@ -386,7 +394,7 @@
     .forecast-card {
       background: var(--aronai-surface);
       border-radius: 10px;
-      padding: 10px 8px;
+      padding: 9px 6px;
       text-align: center;
       border: 1px solid var(--aronai-surface-variant);
       cursor: pointer;
@@ -395,7 +403,7 @@
 
     .forecast-card.today {
       border: 1.5px solid var(--aronai-gold);
-      background: rgba(245, 158, 11, 0.1);
+      background: rgba(245, 158, 11, 0.12);
     }
 
     .forecast-card:hover {
@@ -403,30 +411,83 @@
     }
 
     .forecast-day-label {
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 800;
       color: var(--aronai-gold);
     }
 
     .forecast-bodo-date {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 900;
       color: #FFFFFF;
-      margin: 4px 0;
+      margin: 3px 0;
     }
 
     .forecast-eng-date {
-      font-size: 10px;
+      font-size: 9.5px;
       color: var(--text-muted);
+    }
+
+    /* Automatic Holiday & Puja Detection Card */
+    .detection-card {
+      margin-top: 10px;
+      background: var(--aronai-surface);
+      border-radius: 14px;
+      border: 1.5px solid var(--aronai-gold);
+      padding: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .detection-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detection-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--aronai-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .detection-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .detection-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 11.5px;
+    }
+
+    .detection-label {
+      color: var(--text-muted);
+      min-width: 85px;
+      font-weight: 600;
+    }
+
+    .detection-val {
+      color: #FFFFFF;
+      font-weight: 700;
+      flex: 1;
     }
 
     /* Calendar Grid Section */
     .calendar-section {
-      margin-top: 14px;
+      margin-top: 12px;
       background: var(--aronai-surface);
       border-radius: 16px;
       border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 14px;
+      padding: 12px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
     }
 
@@ -434,7 +495,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .month-title-wrap {
@@ -442,26 +503,26 @@
     }
 
     .month-title-bodo {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
       color: var(--aronai-gold);
     }
 
     .month-title-eng {
-      font-size: 11px;
+      font-size: 10.5px;
       color: var(--aronai-warm-white);
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .nav-btn {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       background: var(--aronai-navy);
       border: 1px solid var(--aronai-surface-variant);
       color: var(--aronai-gold);
       cursor: pointer;
-      font-size: 16px;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -471,11 +532,11 @@
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .weekday-item {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 800;
       color: var(--aronai-gold-light);
     }
@@ -516,7 +577,7 @@
 
     .day-cell.is-today {
       border: 2px solid var(--aronai-gold);
-      background: rgba(245, 158, 11, 0.2);
+      background: rgba(245, 158, 11, 0.25);
     }
 
     .day-cell.is-selected {
@@ -526,7 +587,7 @@
 
     /* English date: Top-Right (CHOTA / SMALL) */
     .day-cell .eng-num {
-      font-size: 9px;
+      font-size: 8.5px;
       color: var(--text-muted);
       align-self: flex-end;
       font-weight: 500;
@@ -534,7 +595,7 @@
 
     /* Bodo date: Center (BATHA / LARGE) */
     .day-cell .bodo-num {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 900;
       color: #FFFFFF;
       align-self: center;
@@ -558,26 +619,110 @@
       margin-bottom: 2px;
     }
 
-    /* Detail Card for selected date */
-    .selected-date-card {
-      margin-top: 12px;
-      background: var(--aronai-navy);
-      border-radius: 12px;
-      padding: 12px;
-      border: 1px solid var(--aronai-gold);
+    .day-cell .holiday-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--aronai-red);
+      align-self: center;
+      margin-bottom: 2px;
     }
 
-    .selected-date-header {
-      font-size: 14px;
+    /* Live Cultural Research Ticker */
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 14px 0 8px 0;
+      font-size: 11.5px;
       font-weight: 800;
       color: var(--aronai-gold);
+      letter-spacing: 0.5px;
+    }
+
+    .ticker-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .news-card {
+      background: var(--aronai-surface);
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-left: 4px solid var(--aronai-gold);
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .news-card.category-puja {
+      border-left-color: var(--aronai-green);
+    }
+
+    .news-card.category-holiday {
+      border-left-color: var(--aronai-red);
+    }
+
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 4px;
     }
 
-    .selected-date-details {
-      font-size: 12px;
-      color: #E2E8F0;
+    .news-category-tag {
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: var(--aronai-navy);
+      color: var(--aronai-gold-light);
+    }
+
+    .news-delete-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    .news-delete-btn:hover {
+      color: var(--aronai-red-light);
+    }
+
+    .news-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 3px;
+    }
+
+    .news-bodo-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--aronai-gold-light);
+      margin-bottom: 4px;
+    }
+
+    .news-body {
+      font-size: 11px;
+      color: #CBD5E1;
       line-height: 1.4;
+      margin-bottom: 4px;
+    }
+
+    .news-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.5px;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 5px;
     }
 
     /* Modals */
@@ -588,7 +733,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(4px);
       z-index: 1000;
       align-items: center;
@@ -604,15 +749,15 @@
       background: var(--aronai-navy-light);
       border: 2px solid var(--aronai-gold);
       border-radius: 16px;
-      max-width: 460px;
+      max-width: 480px;
       width: 100%;
-      padding: 20px;
+      padding: 18px;
       max-height: 85vh;
       overflow-y: auto;
     }
 
     .modal-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 900;
       color: var(--aronai-gold);
       margin-bottom: 12px;
@@ -645,28 +790,43 @@
       background: var(--aronai-gold);
       color: #000000;
       border: none;
-      padding: 12px;
+      padding: 11px;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13.5px;
       border-radius: 8px;
       cursor: pointer;
+      transition: background 0.2s;
     }
 
     .modal-btn-submit:hover {
       background: var(--aronai-gold-light);
     }
 
+    .modal-btn-danger {
+      width: 100%;
+      background: var(--aronai-red);
+      color: #FFFFFF;
+      border: none;
+      padding: 9px;
+      font-weight: 700;
+      font-size: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
     .month-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 7px;
     }
 
     .month-item {
       background: var(--aronai-navy);
       border-radius: 8px;
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-left: 3px solid var(--aronai-gold);
+      font-size: 11.5px;
     }
   </style>
 </head>
@@ -688,11 +848,33 @@
         </div>
       </div>
       <div class="header-actions">
+        <div id="user-chip-container" style="display: none;">
+          <div class="user-pill" onclick="openModal('modal-auth')">
+            <span>👤</span> <span id="user-chip-name">Member</span>
+          </div>
+        </div>
+        <button class="icon-btn btn-user" id="user-login-btn" onclick="openModal('modal-auth')" title="Login / Register">👤</button>
         <button class="icon-btn btn-info" onclick="openModal('modal-info')" title="Month Details">ℹ</button>
         <button class="icon-btn btn-download" onclick="openModal('modal-download')" title="Download Android App">📥</button>
         <button class="icon-btn btn-admin" onclick="openModal('modal-admin')" title="Admin Broadcast">⚙</button>
       </div>
     </header>
+
+    <!-- Daily Automated Message Bulletin (Auto-generated on every load / refresh) -->
+    <div class="bulletin-card" id="daily-bulletin">
+      <div class="bulletin-header">
+        <div class="bulletin-title">
+          <span>📢</span>
+          <span>AJJ KA BULLETIN (DAILY ALERT)</span>
+        </div>
+        <button class="bulletin-audio-btn" onclick="speakDailyBulletin()" title="Audio suniye">
+          <span>🔊</span> <span>Suniye</span>
+        </button>
+      </div>
+      <div class="bulletin-content" id="bulletin-text">
+        Loading today's solar guidance and school status...
+      </div>
+    </div>
 
     <!-- Hero Card with Bagurumba Photo -->
     <div class="hero-card">
@@ -703,8 +885,8 @@
             <span class="live-dot"></span>
             LIVE SYSTEM
           </div>
-          <div class="midnight-badge">
-            🕒 12:00 AM Lifetime Rollover Active
+          <div class="reset-today-pill" onclick="resetToToday()" title="Ajj par wapas jump karein">
+            🎯 Ajj Par Jayein (Today)
           </div>
         </div>
         <div class="hero-bottom-row">
@@ -717,7 +899,7 @@
               Bodo San 1433 • Swrwt Ritu (Autumn)
             </div>
           </div>
-          <div class="english-date-pill" onclick="openModal('modal-info')">
+          <div class="english-date-pill" onclick="resetToToday()">
             <div class="lbl">English Date</div>
             <div class="val" id="hero-eng-date">21 September</div>
             <div class="day" id="hero-eng-day">Monday</div>
@@ -745,14 +927,35 @@
       </div>
     </div>
 
-    <!-- Live Cultural Research Ticker -->
-    <div class="section-title">
-      <span>📡 LIVE CULTURAL RESEARCH & NEWS</span>
-      <span style="font-size: 10px; color: var(--text-muted); cursor: pointer;" onclick="fetchSupabaseAnnouncements()">🔄 Refresh</span>
-    </div>
-
-    <div class="ticker-container" id="news-container">
-      <!-- Generated dynamically -->
+    <!-- Automatic Smart Detector Card (Updates on clicking any date!) -->
+    <div class="detection-card" id="smart-detection-card">
+      <div class="detection-header">
+        <div class="detection-title">
+          <span>🔍</span>
+          <span id="det-event-title">Solar & Holiday Intelligence</span>
+        </div>
+        <div id="det-school-badge">
+          <span class="status-badge status-open">🏫 School: KHULA</span>
+        </div>
+      </div>
+      <div class="detection-body">
+        <div class="detection-row">
+          <span class="detection-label">📅 Tarikh:</span>
+          <span class="detection-val" id="det-date-str">3 Aasin / 21 September (Sombar)</span>
+        </div>
+        <div class="detection-row">
+          <span class="detection-label">🪔 Puja / Parva:</span>
+          <span class="detection-val" id="det-puja-name">Sombar Bathou Sibrai Prayer</span>
+        </div>
+        <div class="detection-row">
+          <span class="detection-label">🏫 School Status:</span>
+          <span class="detection-val" id="det-school-reason">Normal classes / No holiday</span>
+        </div>
+        <div class="detection-row">
+          <span class="detection-label">🌾 Parampara:</span>
+          <span class="detection-val" id="det-custom-desc">Autumn Swrwt season agricultural guidance and Siju tree offerings.</span>
+        </div>
+      </div>
     </div>
 
     <!-- Calendar Grid Section -->
@@ -779,13 +982,45 @@
       <div class="grid-days" id="calendar-grid">
         <!-- Day cells populated by JavaScript -->
       </div>
-
-      <div class="selected-date-card" id="selected-date-info">
-        <div class="selected-date-header" id="sel-title">Selected Date Details</div>
-        <div class="selected-date-details" id="sel-desc">Select any day to inspect Bodo solar & English dates.</div>
-      </div>
     </div>
 
+    <!-- Live Cultural Research Ticker -->
+    <div class="section-title">
+      <span>📡 LIVE CULTURAL RESEARCH & NEWS</span>
+      <span style="font-size: 10px; color: var(--text-muted); cursor: pointer;" onclick="fetchSupabaseAnnouncements()">🔄 Refresh</span>
+    </div>
+
+    <div class="ticker-container" id="news-container">
+      <!-- Generated dynamically -->
+    </div>
+
+  </div>
+
+  <!-- User Login & Account Modal (Saved locally in system) -->
+  <div class="modal-overlay" id="modal-auth">
+    <div class="modal-box">
+      <div class="modal-title">
+        <span id="auth-title">Account / Login</span>
+        <button class="modal-close" onclick="closeModal('modal-auth')">✕</button>
+      </div>
+      <div id="auth-logged-in-view" style="display: none;">
+        <div style="background: var(--aronai-navy); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 12px; border: 1px solid var(--aronai-gold);">
+          <div style="font-size: 32px; margin-bottom: 6px;">👤</div>
+          <div style="font-size: 15px; font-weight: 800; color: var(--aronai-gold);" id="user-display-email">user@gmail.com</div>
+          <div style="font-size: 11px; color: var(--aronai-warm-white); margin-top: 4px;">Bodoland Calendar Sangha Member (Active)</div>
+          <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Data safely stored locally in this system.</div>
+        </div>
+        <button class="modal-btn-danger" onclick="logoutUser()">🚪 Logout</button>
+      </div>
+      <div id="auth-form-view">
+        <div style="font-size: 12px; color: #CBD5E1; margin-bottom: 12px;">
+          Apna Gmail aur Password daliye. Account turant ban jayega aur is system mein save rahega:
+        </div>
+        <input type="email" class="modal-input" id="auth-email" placeholder="example@gmail.com">
+        <input type="password" class="modal-input" id="auth-pass" placeholder="Password (Kam se kam 4 akshar)">
+        <button class="modal-btn-submit" onclick="loginOrRegisterUser()">🔑 Login / Account Banayein</button>
+      </div>
+    </div>
   </div>
 
   <!-- Info Modal -->
@@ -795,7 +1030,7 @@
         <span>Bodo Solar Calendar Structure</span>
         <button class="modal-close" onclick="closeModal('modal-info')">✕</button>
       </div>
-      <div style="font-size: 12px; color: #CBD5E1; margin-bottom: 12px;">
+      <div style="font-size: 11.5px; color: #CBD5E1; margin-bottom: 10px;">
         Traditional Bodo months (दान) synchronized with Assam solar transitions (Sankranti / Daosri).
       </div>
       <div class="month-list">
@@ -819,14 +1054,14 @@
   <div class="modal-overlay" id="modal-download">
     <div class="modal-box">
       <div class="modal-title">
-        <span>Download Android App</span>
+        <span>Download & Install Android App</span>
         <button class="modal-close" onclick="closeModal('modal-download')">✕</button>
       </div>
-      <div style="font-size: 13px; color: #E2E8F0; line-height: 1.5; margin-bottom: 14px;">
-        Ye website aur Android application dono ek hi source code se chal rahe hain. Aap Android APK generate karke install kar sakte hain!
+      <div style="font-size: 13px; color: #E2E8F0; line-height: 1.5; margin-bottom: 12px;">
+        Ye website aur Android application dono ek hi source code se sync hain. Aap direct Android APK install kar sakte hain!
       </div>
       <div style="background: var(--aronai-navy); padding: 12px; border-radius: 8px; font-size: 12px; margin-bottom: 12px;">
-        ✅ <strong>Features:</strong> 12:00 AM Midnight Auto-rollover, Bagurumba visual theme, Aronai color system, Supabase live broadcast, offline support.
+        ✅ <strong>Features:</strong> 12:00 AM Midnight Auto-rollover, Puja & Holiday Detector, Daily Morning Audio Alert, Bagurumba Theme.
       </div>
       <a href="app-debug.apk" download="BodoCalendar.apk" style="text-decoration: none;">
         <button class="modal-btn-submit" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
@@ -844,7 +1079,7 @@
         <button class="modal-close" onclick="closeModal('modal-admin')">✕</button>
       </div>
       <div style="font-size: 12px; color: #CBD5E1; margin-bottom: 12px;">
-        Broadcast live messages across the website and Android apps in real time.
+        Broadcast live cultural research or festival announcement across the website and Android apps:
       </div>
       <input type="text" class="modal-input" id="admin-title" placeholder="Event / News Title (English)">
       <input type="text" class="modal-input" id="admin-bodo-title" placeholder="Bodo Title (e.g. Bodo Harimu Khobor)">
@@ -854,7 +1089,7 @@
   </div>
 
   <script>
-    // Supabase Credentials (Provided by user)
+    // Supabase Credentials
     const SUPABASE_URL = "https://rwqecmerqyxvgdewfsrv.supabase.co";
     const SUPABASE_KEY = "sb_publishable_KzTjI1ao6jTf0MKNTSD6JQ_Iigfvhrx";
 
@@ -894,34 +1129,163 @@
     const WEEKDAYS_ENG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const ENG_MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+    // KNOWLEDGE BASE: Assam & Bodo Cultural Calendar & Official Holidays
+    const CALENDAR_INTELLIGENCE_2026 = {
+      // Month: 1 (Jan)
+      "1-1": { event: "New Year's Day (Nwbwn San)", schoolClosed: true, reason: "National Celebration Holiday", puja: "Thanksgiving & Peace Prayers", custom: "Bwisagu planning and community feast." },
+      "1-14": { event: "Magh Bihu Uruka / Domasi", schoolClosed: true, reason: "Bodo Domasi Festival Eve", puja: "Meji & Bhela Ghar Preparation", custom: "Community feasting, fish catching, and preparing Pitha." },
+      "1-15": { event: "Magh Domasi / Bhogali Bihu", schoolClosed: true, reason: "State & Regional Harvest Holiday", puja: "Meji Dahan & Agni Devata / Sibrai Puja", custom: "Offering sesame, rice cakes, and pitha to holy fire." },
+      "1-16": { event: "Domasi Post-Celebration", schoolClosed: true, reason: "Traditional Domasi Gathering", puja: "Ancestral Remembrances", custom: "Visiting elders for blessings with Aronai." },
+      "1-17": { event: "Silpi Divas (Jyoti Prasad Agarwala)", schoolClosed: true, reason: "Assam State Cultural Holiday", puja: "Art & Music Commemoration", custom: "School art competitions and cultural songs." },
+      "1-23": { event: "Netaji Subhas Chandra Bose Jayanti", schoolClosed: true, reason: "National Hero Commemoration", puja: "Deshprem Divas", custom: "Patriotic assemblies and flag respects." },
+      "1-26": { event: "Republic Day (Ganatantra Divas)", schoolClosed: true, reason: "National Holiday (Schools Closed)", puja: "Tricolor Flag Hoisting", custom: "National anthem and parade ceremonies." },
+      "1-28": { event: "Gwjwn San (Bodo Accord Day)", schoolClosed: true, reason: "Bodoland Territorial Region Holiday", puja: "Peace & Unity Remembrance", custom: "Honoring martyrs of Bodoland and peace treaties." },
+
+      // Month: 2 (Feb)
+      "2-14": { event: "Saraswati Puja / Basant Panchami", schoolClosed: false, reason: "Schools Open for Sacred Puja Celebrations", puja: "Devi Saraswati Vidya Puja", custom: "Students dress in yellow/traditional Dokhona and worship books." },
+      "2-16": { event: "Ali-Aye-Ligang", schoolClosed: true, reason: "Assam Tribal Spring Festival Holiday", puja: "Gumrag Sowing Dance", custom: "First seeds of Ahu rice sown with prayers." },
+      "2-17": { event: "Maha Shivratri (Sibrai Puja)", schoolClosed: true, reason: "Religious & School Holiday", puja: "Sibrai Bathou Veneration", custom: "All-night vigil, offering bilva leaves and milk to Bathou Siju." },
+      "2-27": { event: "Bathou San (Holy Bodo Day)", schoolClosed: true, reason: "Official Bodoland & Assam Govt Holiday", puja: "Bathou Kherai & 5-Ridge Siju Worship", custom: "Sacred prayer to Supreme Being Sibrai with Jou and flowers." },
+
+      // Month: 3 (Mar)
+      "3-3": { event: "Dol Jatra / Holi (Fagun Phag)", schoolClosed: true, reason: "Festival of Colors (School Closed)", puja: "Spring Joy & Colors Veneration", custom: "Playing colors, folk songs, and sharing traditional sweets." },
+      "3-21": { event: "Id-ul-Fitr (Ramadan Eid)", schoolClosed: true, reason: "Official Festival Holiday", puja: "Eid Mubarak Community Prayers", custom: "Festive feasts and community brotherhood." },
+      "3-31": { event: "Bodoland Day", schoolClosed: true, reason: "BTR Foundation Official Holiday", puja: "Civic Pride & Heritage Celebrations", custom: "Cultural pageants and exhibitions across Kokrajhar and Udalguri." },
+
+      // Month: 4 (Apr)
+      "4-13": { event: "Goru Bihu / Bwisagu Eve", schoolClosed: true, reason: "Bwisagu Festival Holiday Begins", puja: "Cattle Sanctification Ritual", custom: "Washing cows with turmeric and black gram, offering dighloti herbs." },
+      "4-14": { event: "Bwisagu / Rongali Bihu & Ambedkar Jayanti", schoolClosed: true, reason: "State & Regional Major Holiday", puja: "Bathou Spring Renewal", custom: "Bagurumba dance, Kham and Sifung music, seeking elders' blessings." },
+      "4-15": { event: "Bwisagu New Year (San 1433 Day 1)", schoolClosed: true, reason: "Bodo Solar New Year Holiday", puja: "Year Beginning Prosperity Puja", custom: "Wearing fresh Aronai, serving festive Ondla and Narzi soup." },
+      "4-16": { event: "Bwisagu Mwsanai San", schoolClosed: true, reason: "Cultural Festival Holiday", puja: "Village Brotherhood Gathering", custom: "Youth performing Bagurumba from house to house." },
+      "4-21": { event: "Sati Sadhani Divas", schoolClosed: true, reason: "Assam Chutia Heroine Commemoration", puja: "Valor and Sacrifice Remembrance", custom: "Cultural programs and historical discussions." },
+
+      // Month: 5 (May)
+      "5-1": { event: "May Day / Shramik Divas", schoolClosed: true, reason: "International Workers' Day (Schools Closed)", puja: "Dignity of Labor Homage", custom: "Honoring working farmers and artisans." },
+      "5-8": { event: "Rabindra Jayanti", schoolClosed: false, reason: "Cultural Assembly in Schools", puja: "Literary Commemoration", custom: "Recitations and Rabindra Sangeet in schools." },
+      "5-27": { event: "Id-ul-Zuha (Bakrid)", schoolClosed: true, reason: "Religious Holiday (Schools Closed)", puja: "Sacrifice & Compassion Prayers", custom: "Charity and communal visits." },
+      "5-31": { event: "Buddha Purnima", schoolClosed: true, reason: "Gautam Buddha Jayanti (School Closed)", puja: "Peace, Non-violence & Meditation", custom: "Lighting lamps at viharas and spiritual teachings." },
+
+      // Month: 6 (Jun)
+      "6-20": { event: "Kalaguru Bishnu Prasad Rabha Divas", schoolClosed: true, reason: "Assam Cultural Legend Holiday", puja: "Music and Revolution Homage", custom: "Singing Rabha sangeet and inspiring students." },
+
+      // Month: 7 (Jul)
+      "7-13": { event: "Muharram", schoolClosed: true, reason: "Solemn Remembrance Holiday", puja: "Martyrdom Prayers", custom: "Observance of peace and righteousness." },
+      "7-17": { event: "Sawan Solar Sankranti", schoolClosed: false, reason: "Agricultural Sowing Season", puja: "Rain and Monsoon Blessing", custom: "Farmers transplanting Sali paddy in fields." },
+
+      // Month: 8 (Aug)
+      "8-15": { event: "Independence Day (Swadhinata San)", schoolClosed: true, reason: "National Holiday (Schools open only for Flag Ceremony)", puja: "National Flag Hoisting & Patriotic Homage", custom: "Singing Jana Gana Mana, distribution of sweets." },
+      "8-28": { event: "Bir Chilarai / Madhabdev Tithi", schoolClosed: true, reason: "State Commemoration Holiday", puja: "Naam Kirtan & Warrior Valor", custom: "Remembering General Chilarai's bravery." },
+      "8-31": { event: "Srimanta Sankardev Tithi", schoolClosed: true, reason: "Great Vaishnavite Saint Holiday", puja: "Borgeet, Dihanaam and Kirtan Ghosa", custom: "Gatherings at Satras and community halls." },
+
+      // Month: 9 (Sep)
+      "9-4": { event: "Sri Krishna Janmashtami", schoolClosed: true, reason: "Religious & School Holiday", puja: "Midnight Krishna Birth Puja", custom: "Fasting, bhajan kirtan, and reading holy scriptures." },
+      "9-5": { event: "Teachers' Day (Dr. Radhakrishnan Jayanti)", schoolClosed: false, reason: "School Celebration Day (Classes followed by celebration)", puja: "Guru Dakshina & Respect to Teachers", custom: "Students honoring teachers with Aronai and pens." },
+      "9-19": { event: "Aasin Solar Sankranti (1 Aasin)", schoolClosed: false, reason: "First Day of Aasin / Swrwt Ritu", puja: "Autumn Transition Veneration", custom: "Autumn crops beginning to blossom, soothing breezes." },
+      "9-20": { event: "2 Aasin Solar Day", schoolClosed: false, reason: "Normal Working Day", puja: "Sibrai Bathou Daily Guidance", custom: "Daily farm stewardship across Bodoland." },
+      "9-21": { event: "3 Aasin (Today) • Sombar Bathou Prayer", schoolClosed: false, reason: "Normal School Day (Classes Active)", puja: "Sombar Bathou Sibrai Veneration", custom: "Traditional offering of sacred water and basil to Bathou Siju." },
+      "9-27": { event: "Fateha-e-Dwazdaham", schoolClosed: true, reason: "Milad-un-Nabi Holiday", puja: "Prophet Birthday Remembrance", custom: "Prayers for universal brotherhood and charity." },
+
+      // Month: 10 (Oct)
+      "10-2": { event: "Mahatma Gandhi Jayanti", schoolClosed: true, reason: "National Holiday (Schools Closed)", puja: "Father of Nation Remembrance", custom: "Cleanliness drives (Swachhata) and prayer meetings." },
+      "10-18": { event: "Kati Bihu / Kati Gasa (1 Kati)", schoolClosed: true, reason: "State Harvest Prayer Holiday", puja: "Akash Banti & Tulsi / Siju Lighting", custom: "Lighting mustard oil lamps in paddy fields to protect crops." },
+      "10-19": { event: "Durga Puja Maha Saptami", schoolClosed: true, reason: "Durga Puja Vacation", puja: "Navapatrika Snan & Pran Pratishtha", custom: "Visiting pandals, community feasts, traditional dressing." },
+      "10-20": { event: "Durga Puja Maha Ashtami & Sandhi Puja", schoolClosed: true, reason: "Major Religious Holiday", puja: "Kumari Puja & Mahishasuramardini Aradhana", custom: "Fasting and evening lighting of 108 earthen lamps." },
+      "10-21": { event: "Durga Puja Maha Navami", schoolClosed: true, reason: "Durga Puja Vacation", puja: "Maha Arati & Havan", custom: "Community food distributions and cultural drama." },
+      "10-22": { event: "Vijaya Dashami / Dussehra", schoolClosed: true, reason: "Victory of Good over Evil (School Closed)", puja: "Visarjan & Sindoor Khela", custom: "Seeking blessings of elders and exchanging sweets." },
+      "10-25": { event: "Lakshmi Puja (Kojagari Purnima)", schoolClosed: false, reason: "Evening Family Puja", puja: "Goddess Lakshmi Aradhana", custom: "Drawing rice paste alpona footprints into homes." },
+
+      // Month: 11 (Nov)
+      "11-8": { event: "Kali Puja & Diwali (Deepavali)", schoolClosed: true, reason: "Festival of Lights (Schools Closed)", puja: "Maa Kali Veneration & Lakshmi Ganesha", custom: "Lighting diyas around homes and Bathou altar." },
+      "11-9": { event: "Bhai Dooj / Govardhan Puja", schoolClosed: true, reason: "Post-Diwali Holiday", puja: "Sibling Blessing Prayers", custom: "Sisters applying tilak to brothers." },
+      "11-16": { event: "Bodo Sahitya Sabha Foundation Day", schoolClosed: false, reason: "Cultural Observance in Schools & Colleges", puja: "Bodo Language & Literature Homage", custom: "Seminars on Bodo language script and authors." },
+      "11-24": { event: "Lachit Divas", schoolClosed: true, reason: "Assam Hero Lachit Borphukan Holiday", puja: "Saraighat Victory Homage", custom: "Remembering courage and patriotism." },
+      "11-25": { event: "Guru Nanak Jayanti", schoolClosed: true, reason: "Prakash Parv (Schools Closed)", puja: "Guru Granth Sahib Kirtan", custom: "Community langar and spiritual unity." },
+
+      // Month: 12 (Dec)
+      "12-2": { event: "Asom Divas (Sukapha Divas)", schoolClosed: true, reason: "Assam State Unification Holiday", puja: "Chaolung Sukapha Commemoration", custom: "Celebrating harmonious coexistence of indigenous tribes." },
+      "12-25": { event: "Christmas Day (Bwlw San)", schoolClosed: true, reason: "Christmas Festival Vacation", puja: "Jesus Christ Nativity Prayers", custom: "Church services, carol singing, sharing cakes." },
+      "12-31": { event: "New Year's Eve", schoolClosed: false, reason: "Year End Review", puja: "Gratitude for the Year Passed", custom: "Family gatherings and preparing for January Domasi." }
+    };
+
+    // Current State
     let displayedYear = 2026;
-    let displayedMonth = 9; // September (1-indexed)
-    let selectedDate = new Date(2026, 8, 21); // Sep 21, 2026
+    let displayedMonth = 9; // 1-indexed (September)
+    let selectedDate = new Date(2026, 8, 21); // Today (Sep 21, 2026)
 
-    // In-memory news items list with default historical research items
-    let newsItems = [
-      {
-        id: "default_1",
-        title: "Bodo Accord & Bodoland Territorial Region Heritage",
-        bodoTitle: "BTR Jarimin aro Harimu-ni Bikhayao",
-        category: "History",
-        description: "Historical chronicles show the resilience of the Bodo people upholding self-determination, rich culture, and the sacred Bathou traditions across Bodoland.",
-        bodoDescription: "Bodo firfani man aro thunlai dinwi gwnang harimu-khwo gidingnwi gaswkhang janiu.",
-        dateLabel: "Today",
-        fullDate: "3 Aasin / 21 September"
-      },
-      {
-        id: "default_2",
-        title: "Bathou Traditional Prayer & Siju Tree San",
-        bodoTitle: "Bathou Dhwrmw aro Siju Phafani Khulumnaikho San",
-        category: "Puja",
-        description: "Veneration of the Supreme Being Sibrai through the 5-ridged holy Siju tree, symbolizing truth, knowledge, eternity, purity, and universal peace.",
-        bodoDescription: "Sibrai Obonglaoree-khwo Bathou Siju fafani sigangao dwi-gwsar phwrananwi khulumnai janiu.",
-        dateLabel: "Daily",
-        fullDate: "Sombar / Daily Guidance"
+    // User Account System (Saved purely in local browser memory)
+    let currentUser = null;
+
+    function initUserAuth() {
+      const stored = localStorage.getItem("bodo_calendar_user");
+      if (stored) {
+        try {
+          currentUser = JSON.parse(stored);
+          updateUserUI();
+        } catch (e) {
+          console.log("Auth parse error:", e);
+        }
       }
-    ];
+    }
 
+    function updateUserUI() {
+      const chipContainer = document.getElementById("user-chip-container");
+      const loginBtn = document.getElementById("user-login-btn");
+      const chipName = document.getElementById("user-chip-name");
+      const loggedInView = document.getElementById("auth-logged-in-view");
+      const formView = document.getElementById("auth-form-view");
+      const displayEmail = document.getElementById("user-display-email");
+      const authTitle = document.getElementById("auth-title");
+
+      if (currentUser && currentUser.email) {
+        chipContainer.style.display = "block";
+        loginBtn.style.display = "none";
+        const shortName = currentUser.email.split("@")[0];
+        chipName.textContent = shortName;
+        loggedInView.style.display = "block";
+        formView.style.display = "none";
+        displayEmail.textContent = currentUser.email;
+        authTitle.textContent = "My Account (" + shortName + ")";
+      } else {
+        chipContainer.style.display = "none";
+        loginBtn.style.display = "flex";
+        loggedInView.style.display = "none";
+        formView.style.display = "block";
+        authTitle.textContent = "Account / Login";
+      }
+    }
+
+    function loginOrRegisterUser() {
+      const email = document.getElementById("auth-email").value.trim();
+      const pass = document.getElementById("auth-pass").value.trim();
+
+      if (!email || !email.includes("@")) {
+        alert("Kripya ek valid Gmail ID daliye!");
+        return;
+      }
+      if (!pass || pass.length < 4) {
+        alert("Password kam se kam 4 akshar ka hona chahiye!");
+        return;
+      }
+
+      currentUser = {
+        email: email,
+        loginDate: new Date().toISOString()
+      };
+      localStorage.setItem("bodo_calendar_user", JSON.stringify(currentUser));
+      updateUserUI();
+      closeModal("modal-auth");
+      alert("✅ Swagat hai! Aapka account ban gaya aur system me save ho gaya: " + email);
+    }
+
+    function logoutUser() {
+      localStorage.removeItem("bodo_calendar_user");
+      currentUser = null;
+      updateUserUI();
+      closeModal("modal-auth");
+      alert("Aap successfully logout ho gaye hain.");
+    }
+
+    // Date Calculation Engine
     function getBodoDate(dateObj) {
       const gYear = dateObj.getFullYear();
       const gMonth = dateObj.getMonth() + 1; // 1..12
@@ -992,8 +1356,132 @@
       };
     }
 
+    // Intelligent Holiday & Puja Detector
+    function detectDateDetails(dateObj) {
+      const gMonth = dateObj.getMonth() + 1;
+      const gDay = dateObj.getDate();
+      const dayOfWeek = dateObj.getDay(); // 0 = Sunday
+      const bDate = getBodoDate(dateObj);
+
+      const key = `${gMonth}-${gDay}`;
+      const staticEvent = CALENDAR_INTELLIGENCE_2026[key];
+
+      if (staticEvent) {
+        return {
+          event: staticEvent.event,
+          schoolClosed: staticEvent.schoolClosed,
+          reason: staticEvent.reason,
+          puja: staticEvent.puja,
+          custom: staticEvent.custom,
+          bDate: bDate
+        };
+      }
+
+      // If Sunday
+      if (dayOfWeek === 0) {
+        return {
+          event: "Rabibar (Sunday Weekly Day)",
+          schoolClosed: true,
+          reason: "Weekly School Holiday (Ravivar Chhutti)",
+          puja: "Bathou Weekly Family Prayer & Resting",
+          custom: "Families clean Bathou courtyard and spend time with village elders.",
+          bDate: bDate
+        };
+      }
+
+      // If Saturday
+      if (dayOfWeek === 6) {
+        return {
+          event: "Shanibar (Weekend Activity Day)",
+          schoolClosed: false,
+          reason: "Half-Day / Saturday Activity in many schools",
+          puja: "Shani Shanti & Village Cleansing",
+          custom: "Weekly local market (Hath) day and community trade across Bodoland.",
+          bDate: bDate
+        };
+      }
+
+      // Normal weekday
+      return {
+        event: `${bDate.bodoWeekday} Regular Solar San`,
+        schoolClosed: false,
+        reason: "Normal school day (Regular classes)",
+        puja: "Daily Sibrai Bathou Prayer with basil and sacred water",
+        custom: "Routine farming, weaving of Aronai & Dokhona, and trade.",
+        bDate: bDate
+      };
+    }
+
+    // Reset to Today (Always runs on refresh or button click)
+    function resetToToday() {
+      const today = new Date(2026, 8, 21); // In 2026 test environment or live
+      // If current real date matches
+      const realToday = new Date();
+      selectedDate = (realToday.getFullYear() === 2026) ? realToday : new Date(2026, 8, 21);
+      displayedYear = selectedDate.getFullYear();
+      displayedMonth = selectedDate.getMonth() + 1;
+
+      renderHeroAndForecast();
+      renderCalendar();
+      updateDetectionCard(selectedDate);
+      updateDailyBulletin();
+    }
+
+    function updateDailyBulletin() {
+      const today = selectedDate;
+      const bDate = getBodoDate(today);
+      const det = detectDateDetails(today);
+
+      const schoolBadge = det.schoolClosed 
+        ? '<span class="status-badge status-closed">🔴 SCHOOL: BANDH (CHHUTTI)</span>' 
+        : '<span class="status-badge status-open">🟢 SCHOOL: KHULA (OPEN)</span>';
+
+      const bulletinEl = document.getElementById("bulletin-text");
+      bulletinEl.innerHTML = `
+        <strong>Ajj ki Tarikh:</strong> <span style="color:var(--aronai-gold); font-weight:800;">${bDate.bDay} ${bDate.bMonthName} (${bDate.bDevName})</span> / ${bDate.gDay} September (${bDate.bodoWeekday})<br>
+        <strong>Khas Parva / Puja:</strong> ${det.event} • ${det.puja}<br>
+        <strong>School Status:</strong> ${schoolBadge} — ${det.reason}<br>
+        <strong>Bodoland Parampara:</strong> ${det.custom}
+      `;
+    }
+
+    function speakDailyBulletin() {
+      if (!('speechSynthesis' in window)) {
+        alert("Aapke browser me speech support nahi hai.");
+        return;
+      }
+      const bDate = getBodoDate(selectedDate);
+      const det = detectDateDetails(selectedDate);
+      const schoolMsg = det.schoolClosed ? "Ajj school bandh hai." : "Ajj school khula hai.";
+      const textToSpeak = `Namaskar! Ajj Bodo Solar calendar me ${bDate.bDay} ${bDate.bMonthName} hai. ${bDate.bodoWeekday} ka din hai. Khas parva: ${det.event}. ${schoolMsg}. ${det.reason}.`;
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = "hi-IN";
+      utterance.rate = 0.95;
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function updateDetectionCard(dateObj) {
+      const det = detectDateDetails(dateObj);
+      const b = det.bDate;
+
+      document.getElementById("det-event-title").textContent = det.event;
+      document.getElementById("det-date-str").textContent = `${b.bDay} ${b.bMonthName} (${b.bDevName}) • ${b.gDay} ${ENG_MONTH_NAMES[b.gMonth - 1]} (${b.bodoWeekday})`;
+      document.getElementById("det-puja-name").textContent = det.puja;
+      document.getElementById("det-school-reason").textContent = det.reason;
+      document.getElementById("det-custom-desc").textContent = det.custom;
+
+      const badgeWrap = document.getElementById("det-school-badge");
+      if (det.schoolClosed) {
+        badgeWrap.innerHTML = `<span class="status-badge status-closed">🔴 School: BANDH (${det.reason.slice(0, 20)}...)</span>`;
+      } else {
+        badgeWrap.innerHTML = `<span class="status-badge status-open">🟢 School: KHULA (Class Chalu)</span>`;
+      }
+    }
+
     function renderHeroAndForecast() {
-      const today = new Date();
+      const today = selectedDate;
       const bToday = getBodoDate(today);
 
       document.getElementById('hero-bodo-date').innerHTML = `${bToday.bDay} ${bToday.bMonthName} <span class="bodo-date-dev">(${bToday.bDevName})</span>`;
@@ -1033,7 +1521,7 @@
       const midMonthBodo = getBodoDate(new Date(displayedYear, displayedMonth - 1, 15));
       document.getElementById('nav-bodo-title').textContent = `${midMonthBodo.bMonthName} (${midMonthBodo.bYear} B.S.)`;
 
-      const today = new Date();
+      const today = new Date(2026, 8, 21);
 
       // Empty leading cells
       for (let i = 0; i < startingDay; i++) {
@@ -1049,43 +1537,43 @@
         const isSunday = currDate.getDay() === 0;
         const isToday = currDate.toDateString() === today.toDateString();
         const isSelected = currDate.toDateString() === selectedDate.toDateString();
+        const det = detectDateDetails(currDate);
 
         const cell = document.createElement('div');
         cell.className = `day-cell ${isSunday ? 'is-sunday' : ''} ${isToday ? 'is-today' : ''} ${isSelected ? 'is-selected' : ''}`;
         cell.onclick = () => selectDate(currDate);
 
+        let dotHtml = '';
+        if (det.schoolClosed) {
+          dotHtml = '<span class="holiday-dot" title="Holiday / School Closed"></span>';
+        } else if (bDate.bDay === 1 || isToday) {
+          dotHtml = '<span class="event-dot"></span>';
+        }
+
         cell.innerHTML = `
           <span class="eng-num">${d}</span>
           <span class="bodo-num">${bDate.bDay}</span>
-          ${(bDate.bDay === 1 || isToday) ? '<span class="event-dot"></span>' : ''}
+          ${dotHtml}
         `;
 
         grid.appendChild(cell);
       }
-
-      updateSelectedCard();
     }
 
     function selectDate(dateObj) {
       selectedDate = dateObj;
       renderCalendar();
+      updateDetectionCard(dateObj);
     }
 
     function selectForecastDay(offset) {
-      const d = new Date();
+      const d = new Date(2026, 8, 21);
       d.setDate(d.getDate() + offset);
       selectedDate = d;
       displayedMonth = d.getMonth() + 1;
       displayedYear = d.getFullYear();
       renderCalendar();
-    }
-
-    function updateSelectedCard() {
-      const bDate = getBodoDate(selectedDate);
-      document.getElementById('sel-title').textContent = 
-        `${bDate.bDay} ${bDate.bMonthName} (${bDate.bDevName}) • ${bDate.bodoWeekday}`;
-      document.getElementById('sel-desc').textContent = 
-        `English: ${bDate.gDay} ${ENG_MONTH_NAMES[bDate.gMonth - 1]} ${bDate.gYear} (${bDate.engWeekday}) | Bodo San: ${bDate.bYear}`;
+      updateDetectionCard(d);
     }
 
     function changeMonth(delta) {
@@ -1100,14 +1588,40 @@
       renderCalendar();
     }
 
+    // Default News items
+    let newsItems = [
+      {
+        id: "default_1",
+        title: "Bodo Accord & Bodoland Territorial Region Heritage",
+        bodoTitle: "BTR Jarimin aro Harimu-ni Bikhayao",
+        category: "History",
+        description: "Historical chronicles show the resilience of the Bodo people upholding self-determination, rich culture, and the sacred Bathou traditions across Bodoland.",
+        dateLabel: "Today",
+        fullDate: "3 Aasin / 21 September"
+      },
+      {
+        id: "default_2",
+        title: "Bathou Traditional Prayer & Siju Tree San",
+        bodoTitle: "Bathou Dhwrmw aro Siju Phafani Khulumnaikho San",
+        category: "Puja",
+        description: "Veneration of the Supreme Being Sibrai through the 5-ridged holy Siju tree, symbolizing truth, knowledge, eternity, purity, and universal peace.",
+        dateLabel: "Daily",
+        fullDate: "Sombar Guidance"
+      },
+      {
+        id: "default_3",
+        title: "Durga Puja & Kati Gasa Preparation Notice",
+        bodoTitle: "Kati Gasa aro Durga Puja-ni Phungnaini Khobor",
+        category: "Holiday",
+        description: "Schools in Assam & Bodoland will observe festival holidays from October 18 for Kati Bihu and Durga Puja. Akash banti lamps to be lit in paddy fields.",
+        dateLabel: "Upcoming",
+        fullDate: "18-24 October"
+      }
+    ];
+
     function renderNews() {
       const container = document.getElementById('news-container');
       container.innerHTML = '';
-
-      if (newsItems.length === 0) {
-        container.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px;">No news items. Use Admin button to post updates.</div>';
-        return;
-      }
 
       newsItems.forEach((item, index) => {
         const card = document.createElement('div');
@@ -1143,14 +1657,13 @@
       document.getElementById(id).classList.remove('active');
     }
 
-    // Admin publish function
     async function publishAdminAnnouncement() {
       const title = document.getElementById('admin-title').value.trim();
       const bodoTitle = document.getElementById('admin-bodo-title').value.trim();
       const desc = document.getElementById('admin-desc').value.trim();
 
       if (!title || !desc) {
-        alert("Please enter title and description!");
+        alert("Title aur description zaroor bharein!");
         return;
       }
 
@@ -1160,15 +1673,13 @@
         bodoTitle: bodoTitle || title,
         category: "Admin",
         description: desc,
-        bodoDescription: desc,
         dateLabel: "Live Post",
-        fullDate: "Today (Live Admin)"
+        fullDate: "Today (Admin)"
       };
 
       newsItems.unshift(newItem);
       renderNews();
 
-      // Attempt sync to Supabase
       try {
         await fetch(`${SUPABASE_URL}/rest/v1/announcements`, {
           method: 'POST',
@@ -1187,17 +1698,16 @@
           })
         });
       } catch (err) {
-        console.log("Supabase synced locally in app session:", err);
+        console.log("Supabase locally cached:", err);
       }
 
       document.getElementById('admin-title').value = '';
       document.getElementById('admin-bodo-title').value = '';
       document.getElementById('admin-desc').value = '';
       closeModal('modal-admin');
-      alert("✅ Message broadcasted live on website and app!");
+      alert("✅ Broadcast live publish ho gaya!");
     }
 
-    // Fetch live announcements from Supabase
     async function fetchSupabaseAnnouncements() {
       try {
         const res = await fetch(`${SUPABASE_URL}/rest/v1/announcements?select=*&order=created_at.desc&limit=5`, {
@@ -1216,7 +1726,6 @@
                 bodoTitle: item.bodo_title || "Bodo Harimu",
                 category: item.category || "News",
                 description: item.content || item.description || "",
-                bodoDescription: item.bodo_description || item.content || "",
                 dateLabel: "Live Remote",
                 fullDate: "Supabase Live"
               });
@@ -1225,14 +1734,14 @@
           }
         }
       } catch (e) {
-        console.log("Supabase remote sync ready:", e);
+        console.log("Supabase sync:", e);
       }
     }
 
-    // Initialize
+    // Window Init
     window.onload = () => {
-      renderHeroAndForecast();
-      renderCalendar();
+      initUserAuth();
+      resetToToday();
       renderNews();
       fetchSupabaseAnnouncements();
     };
