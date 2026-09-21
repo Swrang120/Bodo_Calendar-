@@ -32,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.BodoCalendarViewModel
 import com.example.ui.components.AdminPanelDialog
+import com.example.ui.components.AdMobBanner
 import com.example.ui.components.AppDownloadDialog
 import com.example.ui.components.AronaiHeader
 import com.example.ui.components.BodoCalendarGrid
@@ -43,11 +44,16 @@ import com.example.ui.theme.AronaiGoldLight
 import com.example.ui.theme.AronaiNavy
 import com.example.ui.theme.AronaiTextSecondary
 import com.example.ui.theme.MyApplicationTheme
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     enableEdgeToEdge()
+
+    // Initialize Google Mobile Ads SDK
+    MobileAds.initialize(this) {}
+
     setContent {
       MyApplicationTheme(darkTheme = true) {
         val viewModel: BodoCalendarViewModel = viewModel()
@@ -115,7 +121,12 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.testTag("bodo_calendar_grid")
               )
 
-              // 5. Cultural Footer with Traditional Aronai Banner
+              // 5. Google AdMob Banner Ad (User App ID & Banner Unit ID)
+              AdMobBanner(
+                modifier = Modifier.testTag("admob_banner_ad")
+              )
+
+              // 6. Cultural Footer with Traditional Aronai Banner
               CulturalFooter(modifier = Modifier.testTag("cultural_footer"))
 
               Spacer(modifier = Modifier.height(24.dp))

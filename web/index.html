@@ -1076,6 +1076,45 @@
       margin-bottom: 10px;
     }
 
+    /* Ad Banner Slot */
+    .ad-banner-slot {
+      margin: 20px 0 10px 0;
+      background: #111827;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .ad-slot-label {
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #718096;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .ad-slot-box {
+      min-height: 55px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 8px;
+      border: 1px dashed rgba(245, 158, 11, 0.3);
+      padding: 8px;
+    }
+    .ad-slot-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--aronai-gold-light);
+    }
+    .ad-slot-subtext {
+      font-size: 10px;
+      color: #94A3B8;
+      margin-top: 2px;
+    }
+
     /* Bottom Page Footer (Developer Credit) */
     .app-footer {
       margin-top: 36px;
@@ -1370,6 +1409,15 @@
 
     <div class="ticker-container" id="news-container">
       <!-- Generated dynamically -->
+    </div>
+
+    <!-- Sponsored / Ad Space Container -->
+    <div class="ad-banner-slot" id="app-ad-slot">
+      <div class="ad-slot-label">Sponsored Advertisement</div>
+      <div class="ad-slot-box">
+        <div class="ad-slot-text">📢 Google Ads / Sponsor Space</div>
+        <div class="ad-slot-subtext">Banner ID: ca-app-pub-3120006032488545/7506284998</div>
+      </div>
     </div>
 
     <!-- Bottom Page Footer (Developer Credit) -->
