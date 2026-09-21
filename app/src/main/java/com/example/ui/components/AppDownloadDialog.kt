@@ -141,17 +141,14 @@ fun AppDownloadDialog(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // Share App Button
+        // Direct Download / Update Latest APK Button
         ElevatedButton(
           onClick = {
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-              type = "text/plain"
-              putExtra(
-                Intent.EXTRA_TEXT,
-                "Download and Install the official Bodo San Calendar App with live history, Bodo/English solar dates & Bagurumba Aronai themes! Visit: https://rwqecmerqyxvgdewfsrv.supabase.co"
-              )
-            }
-            context.startActivity(Intent.createChooser(shareIntent, "Share Bodo Calendar App"))
+            val downloadIntent = Intent(
+              Intent.ACTION_VIEW,
+              android.net.Uri.parse("https://swrang120.github.io/Bodo_Calendar-/app-debug.apk")
+            )
+            context.startActivity(downloadIntent)
           },
           modifier = Modifier.fillMaxWidth(),
           shape = RoundedCornerShape(10.dp),
@@ -160,9 +157,31 @@ fun AppDownloadDialog(
             contentColor = Color.White
           )
         ) {
-          Icon(imageVector = Icons.Default.Share, contentDescription = "Share App", modifier = Modifier.size(16.dp))
+          Icon(imageVector = Icons.Default.Download, contentDescription = "Download Latest APK", modifier = Modifier.size(18.dp))
+          Spacer(modifier = Modifier.width(8.dp))
+          Text(text = "Download / Update Latest APK", fontWeight = FontWeight.Bold)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Share App Button
+        OutlinedButton(
+          onClick = {
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+              type = "text/plain"
+              putExtra(
+                Intent.EXTRA_TEXT,
+                "Download and Install the official Bodo San Calendar App (Solar 2026)! Latest version: https://swrang120.github.io/Bodo_Calendar-/"
+              )
+            }
+            context.startActivity(Intent.createChooser(shareIntent, "Share Bodo Calendar App"))
+          },
+          modifier = Modifier.fillMaxWidth(),
+          shape = RoundedCornerShape(10.dp)
+        ) {
+          Icon(imageVector = Icons.Default.Share, contentDescription = "Share App", modifier = Modifier.size(16.dp), tint = AronaiWarmWhite)
           Spacer(modifier = Modifier.width(6.dp))
-          Text(text = "Share / Install App Link", fontWeight = FontWeight.Bold)
+          Text(text = "Share App Link", fontWeight = FontWeight.SemiBold, color = AronaiWarmWhite)
         }
 
         Spacer(modifier = Modifier.height(8.dp))

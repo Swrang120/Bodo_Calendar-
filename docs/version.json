@@ -1,0 +1,8 @@
+{
+  "versionCode": 2,
+  "versionName": "2.0",
+  "title": "New Update Available! (v2.0)",
+  "releaseNotes": "1. Live AdMob and Adsterra Ads integration\n2. Real-Time Visitor & Download Live Tracker\n3. Improved Bodo Calendar Solar Engine 2026\n4. Performance & festival accuracy updates",
+  "apkUrl": "https://swrang120.github.io/Bodo_Calendar-/app-debug.apk",
+  "forceUpdate": false
+}

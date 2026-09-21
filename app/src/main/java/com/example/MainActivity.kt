@@ -40,6 +40,7 @@ import com.example.ui.components.LiveHistoryTicker
 import com.example.ui.components.LiveMetricsBar
 import com.example.ui.components.MonthExplanationDialog
 import com.example.ui.components.ThreeDayForecastCard
+import com.example.ui.components.UpdateAvailableDialog
 import com.example.ui.theme.AronaiGold
 import com.example.ui.theme.AronaiGoldLight
 import com.example.ui.theme.AronaiNavy
@@ -160,6 +161,14 @@ class MainActivity : ComponentActivity() {
             if (uiState.showAppDownloadDialog) {
               AppDownloadDialog(
                 onDismiss = { viewModel.toggleAppDownloadDialog(false) }
+              )
+            }
+
+            // In-App Auto Update Popup Dialog for existing users
+            uiState.availableUpdate?.let { updateInfo ->
+              UpdateAvailableDialog(
+                updateInfo = updateInfo,
+                onDismiss = { viewModel.dismissUpdateDialog() }
               )
             }
           }

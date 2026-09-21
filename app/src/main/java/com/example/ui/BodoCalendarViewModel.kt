@@ -3,6 +3,8 @@ package com.example.ui
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.data.AppUpdateInfo
+import com.example.data.AppUpdateManager
 import com.example.data.BodoDate
 import com.example.data.BodoHistoryDatabase
 import com.example.data.BodoMonth
@@ -39,7 +41,8 @@ data class CalendarUiState(
   val showMonthExplanationDialog: Boolean = false,
   val showAdminDialog: Boolean = false,
   val showAppDownloadDialog: Boolean = false,
-  val adminPublishStatus: String? = null
+  val adminPublishStatus: String? = null,
+  val availableUpdate: AppUpdateInfo? = null
 )
 
 class BodoCalendarViewModel(application: Application) : AndroidViewModel(application) {
@@ -54,6 +57,22 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     startMidnightAutoRolloverEngine()
     startLiveTickerRotation()
     syncCloudAnnouncements()
+    checkForAppUpdates()
+  }
+
+  fun checkForAppUpdates() {
+    viewModelScope.launch {
+      // Version code for current installed build
+      val currentVersionCode = 1
+      val update = AppUpdateManager.checkForUpdates(currentVersionCode)
+      if (update != null) {
+        _uiState.value = _uiState.value.copy(availableUpdate = update)
+      }
+    }
+  }
+
+  fun dismissUpdateDialog() {
+    _uiState.value = _uiState.value.copy(availableUpdate = null)
   }
 
   /**
