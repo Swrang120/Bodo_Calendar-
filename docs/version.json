@@ -1,8 +1,8 @@
 {
-  "versionCode": 2,
-  "versionName": "2.0",
-  "title": "New Update Available! (v2.0)",
-  "releaseNotes": "1. Live AdMob and Adsterra Ads integration\n2. Real-Time Visitor & Download Live Tracker\n3. Improved Bodo Calendar Solar Engine 2026\n4. Performance & festival accuracy updates",
+  "versionCode": 3,
+  "versionName": "2.1",
+  "title": "Bodo Calendar v2.1 (Notes & Sound Alert)",
+  "releaseNotes": "1. Date-wise Notes & Reminder with audio sound alert pop-up\n2. App launch opening animation with welcome cultural sound\n3. Full sidebar features and offline support\n4. Accurate 2026 Bodo Solar Calendar",
   "apkUrl": "https://swrang120.github.io/Bodo_Calendar-/app-debug.apk",
   "forceUpdate": false
 }

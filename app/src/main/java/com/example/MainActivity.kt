@@ -7,21 +7,36 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -47,6 +62,7 @@ import com.example.ui.components.AdminPanelDialog
 import com.example.ui.components.AdMobBanner
 import com.example.ui.components.AllNotesListDialog
 import com.example.ui.components.AppDownloadDialog
+import com.example.ui.components.AppLaunchSplashScreen
 import com.example.ui.components.AppSidebarDrawer
 import com.example.ui.components.AronaiHeader
 import com.example.ui.components.BodoCalendarGrid
@@ -61,10 +77,12 @@ import com.example.ui.components.TodayReminderAlertPopup
 import com.example.ui.components.UpdateAvailableDialog
 import com.example.ui.theme.AronaiGold
 import com.example.ui.theme.AronaiGoldLight
+import com.example.ui.theme.AronaiGreen
 import com.example.ui.theme.AronaiNavy
 import com.example.ui.theme.AronaiTextSecondary
 import com.example.ui.theme.AronaiWarmWhite
 import com.example.ui.theme.MyApplicationTheme
+import com.example.util.AudioEffectManager
 import com.google.android.gms.ads.MobileAds
 import kotlinx.coroutines.launch
 
@@ -90,6 +108,7 @@ class MainActivity : ComponentActivity() {
         var showPrivacyDialog by remember { mutableStateOf(false) }
         var showTermsDialog by remember { mutableStateOf(false) }
         var showAllNotesDialog by remember { mutableStateOf(false) }
+        var showSplashScreen by remember { mutableStateOf(true) }
 
         LaunchedEffect(uiState.upToDateNotice) {
           uiState.upToDateNotice?.let { notice ->
@@ -97,6 +116,17 @@ class MainActivity : ComponentActivity() {
           }
         }
 
+        LaunchedEffect(uiState.todayReminderAlertNotes) {
+          if (!uiState.todayReminderAlertNotes.isNullOrEmpty()) {
+            AudioEffectManager.playReminderBellSound(context)
+          }
+        }
+
+        if (showSplashScreen) {
+          AppLaunchSplashScreen(
+            onFinish = { showSplashScreen = false }
+          )
+        } else {
         ModalNavigationDrawer(
           drawerState = drawerState,
           drawerContent = {
@@ -134,7 +164,40 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier
               .fillMaxSize()
               .testTag("bodo_calendar_scaffold"),
-            containerColor = AronaiNavy
+            containerColor = AronaiNavy,
+            floatingActionButton = {
+              ExtendedFloatingActionButton(
+                onClick = {
+                  val today = uiState.todayBodoDate
+                  val dateKey = String.format(
+                    java.util.Locale.ENGLISH,
+                    "%04d-%02d-%02d",
+                    today.gregorianYear,
+                    today.gregorianMonth,
+                    today.gregorianDay
+                  )
+                  val dateDisplay = "${today.bodoDay} ${today.bodoMonth.bodoName} (${today.gregorianDay}/${today.gregorianMonth}/${today.gregorianYear})"
+                  viewModel.openDateNotesDialog(dateKey, dateDisplay)
+                },
+                containerColor = AronaiGold,
+                contentColor = AronaiNavy,
+                elevation = FloatingActionButtonDefaults.elevation(8.dp),
+                icon = {
+                  Icon(
+                    imageVector = Icons.Default.EditNote,
+                    contentDescription = "Note Likhein",
+                    modifier = Modifier.size(24.dp)
+                  )
+                },
+                text = {
+                  Text(
+                    text = "📝 Note Likhein",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp
+                  )
+                }
+              )
+            }
           ) { innerPadding ->
             Box(
               modifier = Modifier
@@ -169,6 +232,80 @@ class MainActivity : ComponentActivity() {
                 onOpenAdminPanel = { viewModel.toggleAdminDialog(true) },
                 modifier = Modifier.testTag("live_history_ticker")
               )
+
+              // Quick Prominent Note & Reminder Banner
+              Row(
+                modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 14.dp, vertical = 6.dp)
+                  .clip(RoundedCornerShape(14.dp))
+                  .background(
+                    Brush.horizontalGradient(
+                      colors = listOf(
+                        Color(0xFF2B200A),
+                        Color(0xFF162335)
+                      )
+                    )
+                  )
+                  .border(1.2.dp, AronaiGold, RoundedCornerShape(14.dp))
+                  .clickable {
+                    val today = uiState.todayBodoDate
+                    val dateKey = String.format(
+                      java.util.Locale.ENGLISH,
+                      "%04d-%02d-%02d",
+                      today.gregorianYear,
+                      today.gregorianMonth,
+                      today.gregorianDay
+                    )
+                    val dateDisplay = "${today.bodoDay} ${today.bodoMonth.bodoName} (${today.gregorianDay}/${today.gregorianMonth}/${today.gregorianYear})"
+                    viewModel.openDateNotesDialog(dateKey, dateDisplay)
+                  }
+                  .padding(horizontal = 12.dp, vertical = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+              ) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                  Box(
+                    modifier = Modifier
+                      .size(36.dp)
+                      .clip(CircleShape)
+                      .background(AronaiGold),
+                    contentAlignment = Alignment.Center
+                  ) {
+                    Text("📝", fontSize = 18.sp)
+                  }
+                  Spacer(modifier = Modifier.width(10.dp))
+                  Column {
+                    Text(
+                      text = "DATE NOTE & REMINDER",
+                      color = AronaiGold,
+                      fontSize = 11.sp,
+                      fontWeight = FontWeight.Black,
+                      letterSpacing = 0.5.sp
+                    )
+                    Text(
+                      text = "Tarik par note likhein, us din automatic sound pop-up milega!",
+                      color = AronaiWarmWhite,
+                      fontSize = 11.sp,
+                      lineHeight = 14.sp
+                    )
+                  }
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Box(
+                  modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(AronaiGreen)
+                    .padding(horizontal = 10.dp, vertical = 6.dp)
+                ) {
+                  Text(
+                    text = "+ Likhein",
+                    color = Color.White,
+                    fontSize = 11.5.sp,
+                    fontWeight = FontWeight.Bold
+                  )
+                }
+              }
 
               // 3. Three-Day Solar Sync: Today, Tomorrow, Day After (Assamese solar sync in Bodo & English)
               ThreeDayForecastCard(
@@ -340,6 +477,7 @@ class MainActivity : ComponentActivity() {
       }
     }
   }
+}
 }
 }
 

@@ -129,24 +129,34 @@ fun AronaiHeader(
 
       // Quick Action Buttons
       Row(verticalAlignment = Alignment.CenterVertically) {
-        // Notes & Reminders button (Quick access to user notes)
-        IconButton(
-          onClick = onOpenNotes,
+        // Notes & Reminders button (Prominent pill button)
+        Box(
           modifier = Modifier
-            .size(36.dp)
-            .clip(CircleShape)
-            .background(AronaiSurface)
-            .border(0.8.dp, AronaiGold.copy(alpha = 0.6f), CircleShape)
+            .clip(RoundedCornerShape(12.dp))
+            .background(AronaiGold.copy(alpha = 0.2f))
+            .border(1.2.dp, AronaiGold, RoundedCornerShape(12.dp))
+            .clickable(onClick = onOpenNotes)
+            .padding(horizontal = 7.dp, vertical = 6.dp),
+          contentAlignment = Alignment.Center
         ) {
-          Icon(
-            imageVector = Icons.Default.EditNote,
-            contentDescription = "Notes & Reminders",
-            tint = AronaiGold,
-            modifier = Modifier.size(20.dp)
-          )
+          Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+              imageVector = Icons.Default.EditNote,
+              contentDescription = "Notes & Reminders",
+              tint = AronaiGold,
+              modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(3.dp))
+            Text(
+              text = "Notes",
+              color = AronaiGold,
+              fontSize = 11.sp,
+              fontWeight = FontWeight.Bold
+            )
+          }
         }
 
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(6.dp))
 
         // Month Explanation Info button
         IconButton(
