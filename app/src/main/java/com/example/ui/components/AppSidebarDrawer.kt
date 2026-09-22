@@ -29,11 +29,17 @@ import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Mail
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
@@ -93,6 +99,9 @@ import java.net.URL
 @Composable
 fun AppSidebarDrawer(
   onClose: () -> Unit,
+  savedNotesCount: Int = 0,
+  onOpenNotes: () -> Unit = {},
+  onCheckUpdates: () -> Unit = {},
   onOpenFeedback: (category: String, title: String) -> Unit,
   onOpenPrivacyPolicy: () -> Unit,
   onOpenTerms: () -> Unit
@@ -155,16 +164,172 @@ fun AppSidebarDrawer(
       }
     }
 
-    Spacer(modifier = Modifier.height(24.dp))
+    Spacer(modifier = Modifier.height(18.dp))
+
+    // User Profile Card (Matches website)
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(14.dp))
+        .background(Color(0xFF161F30))
+        .border(1.dp, Color(0xFF2D3748), RoundedCornerShape(14.dp))
+        .padding(12.dp),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Box(
+        modifier = Modifier
+          .size(42.dp)
+          .clip(CircleShape)
+          .background(AronaiGold.copy(alpha = 0.2f))
+          .border(1.5.dp, AronaiGold, CircleShape),
+        contentAlignment = Alignment.Center
+      ) {
+        Icon(
+          imageVector = Icons.Default.Person,
+          contentDescription = null,
+          tint = AronaiGold,
+          modifier = Modifier.size(24.dp)
+        )
+      }
+      Spacer(modifier = Modifier.width(10.dp))
+      Column {
+        Text(
+          text = "Bodoland Sangha Member",
+          color = AronaiWarmWhite,
+          fontSize = 13.5.sp,
+          fontWeight = FontWeight.Bold
+        )
+        Text(
+          text = "sboro3235@gmail.com",
+          color = AronaiGoldLight,
+          fontSize = 11.sp
+        )
+      }
+    }
+
+    Spacer(modifier = Modifier.height(14.dp))
+
+    // LIVE TRAFFIC & METRICS (Matching Website)
+    Text(
+      text = "LIVE METRICS & COMMUNITY",
+      color = AronaiTextSecondary,
+      fontSize = 10.sp,
+      fontWeight = FontWeight.Bold,
+      letterSpacing = 0.8.sp,
+      modifier = Modifier.padding(start = 4.dp, bottom = 6.dp)
+    )
+
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(12.dp))
+        .background(Color(0xFF131C2E))
+        .border(0.8.dp, Color(0xFF26334D), RoundedCornerShape(12.dp))
+        .padding(10.dp),
+      horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Icon(Icons.Default.Download, contentDescription = null, tint = AronaiGreen, modifier = Modifier.size(13.dp))
+          Spacer(modifier = Modifier.width(3.dp))
+          Text("1,842", color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        }
+        Text("App Downloads", color = AronaiTextSecondary, fontSize = 9.sp)
+      }
+
+      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Icon(Icons.Default.FiberManualRecord, contentDescription = null, tint = Color(0xFF22C55E), modifier = Modifier.size(11.dp))
+          Spacer(modifier = Modifier.width(3.dp))
+          Text("48", color = Color(0xFF22C55E), fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        }
+        Text("Live Online", color = AronaiTextSecondary, fontSize = 9.sp)
+      }
+
+      Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Icon(Icons.Default.Visibility, contentDescription = null, tint = AronaiGold, modifier = Modifier.size(13.dp))
+          Spacer(modifier = Modifier.width(3.dp))
+          Text("28,930", color = AronaiGold, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+        }
+        Text("Total Views", color = AronaiTextSecondary, fontSize = 9.sp)
+      }
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // SECTION: APP VERSION & UPDATES
+    Text(
+      text = "APP VERSION & UPDATES",
+      color = AronaiTextSecondary,
+      fontSize = 10.sp,
+      fontWeight = FontWeight.Bold,
+      letterSpacing = 0.8.sp,
+      modifier = Modifier.padding(start = 4.dp, bottom = 6.dp)
+    )
+
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(14.dp))
+        .background(Color(0xFF161F30))
+        .border(0.8.dp, Color(0xFF2D3748), RoundedCornerShape(14.dp))
+    ) {
+      DrawerMenuItemWithSubtitle(
+        icon = Icons.Default.SystemUpdate,
+        title = "Check for App Updates",
+        subtitle = "Installed: v2.0 • Tap to check latest build",
+        badge = "v2.0",
+        badgeColor = AronaiGreen,
+        onClick = {
+          onClose()
+          onCheckUpdates()
+        }
+      )
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+
+    // SECTION: NOTES & TITHI REMINDERS
+    Text(
+      text = "NOTES & TITHI REMINDERS",
+      color = AronaiTextSecondary,
+      fontSize = 10.sp,
+      fontWeight = FontWeight.Bold,
+      letterSpacing = 0.8.sp,
+      modifier = Modifier.padding(start = 4.dp, bottom = 6.dp)
+    )
+
+    Column(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(14.dp))
+        .background(Color(0xFF161F30))
+        .border(0.8.dp, Color(0xFF2D3748), RoundedCornerShape(14.dp))
+    ) {
+      DrawerMenuItemWithSubtitle(
+        icon = Icons.Default.EditNote,
+        title = "Mere Notes & Tithi Reminders",
+        subtitle = if (savedNotesCount > 0) "$savedNotesCount notes saved • Audio reminder active" else "Date-wise note likhein & audio notification payein",
+        badge = if (savedNotesCount > 0) "$savedNotesCount" else null,
+        badgeColor = AronaiGold,
+        onClick = {
+          onClose()
+          onOpenNotes()
+        }
+      )
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
 
     // SECTION 1: HELP & SUPPORT
     Text(
       text = "HELP & SUPPORT",
       color = AronaiTextSecondary,
-      fontSize = 11.sp,
+      fontSize = 10.sp,
       fontWeight = FontWeight.Bold,
-      letterSpacing = 1.sp,
-      modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+      letterSpacing = 0.8.sp,
+      modifier = Modifier.padding(start = 4.dp, bottom = 6.dp)
     )
 
     Column(
@@ -223,16 +388,16 @@ fun AppSidebarDrawer(
       )
     }
 
-    Spacer(modifier = Modifier.height(22.dp))
+    Spacer(modifier = Modifier.height(16.dp))
 
     // SECTION 2: LEGAL
     Text(
       text = "LEGAL",
       color = AronaiTextSecondary,
-      fontSize = 11.sp,
+      fontSize = 10.sp,
       fontWeight = FontWeight.Bold,
-      letterSpacing = 1.sp,
-      modifier = Modifier.padding(start = 4.dp, bottom = 8.dp)
+      letterSpacing = 0.8.sp,
+      modifier = Modifier.padding(start = 4.dp, bottom = 6.dp)
     )
 
     Column(
@@ -264,7 +429,7 @@ fun AppSidebarDrawer(
       )
     }
 
-    Spacer(modifier = Modifier.height(28.dp))
+    Spacer(modifier = Modifier.height(24.dp))
 
     // SECTION 3: Log Out Button
     Box(
@@ -287,7 +452,7 @@ fun AppSidebarDrawer(
       )
     }
 
-    Spacer(modifier = Modifier.height(14.dp))
+    Spacer(modifier = Modifier.height(12.dp))
 
     // Delete Account Text Button
     Box(
@@ -307,6 +472,103 @@ fun AppSidebarDrawer(
         fontWeight = FontWeight.Medium
       )
     }
+
+    Spacer(modifier = Modifier.height(20.dp))
+
+    // Footer info matching website
+    Column(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+      Text(
+        text = "Bodo Calendar 2026",
+        color = AronaiGoldLight,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Bold
+      )
+      Text(
+        text = "Support: sboro3235@gmail.com",
+        color = AronaiTextSecondary,
+        fontSize = 10.sp
+      )
+      Text(
+        text = "Developed by Swrang Swargiary",
+        color = AronaiTextSecondary.copy(alpha = 0.7f),
+        fontSize = 9.sp
+      )
+    }
+  }
+}
+
+@Composable
+private fun DrawerMenuItemWithSubtitle(
+  icon: ImageVector,
+  title: String,
+  subtitle: String,
+  badge: String? = null,
+  badgeColor: Color = AronaiGold,
+  onClick: () -> Unit
+) {
+  Row(
+    modifier = Modifier
+      .fillMaxWidth()
+      .clickable(onClick = onClick)
+      .padding(horizontal = 14.dp, vertical = 12.dp),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+  ) {
+    Row(
+      verticalAlignment = Alignment.CenterVertically,
+      modifier = Modifier.weight(1f, fill = false)
+    ) {
+      Icon(
+        imageVector = icon,
+        contentDescription = title,
+        tint = AronaiGold,
+        modifier = Modifier.size(22.dp)
+      )
+      Spacer(modifier = Modifier.width(12.dp))
+      Column {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          Text(
+            text = title,
+            color = AronaiWarmWhite,
+            fontSize = 13.5.sp,
+            fontWeight = FontWeight.Bold
+          )
+          if (badge != null) {
+            Spacer(modifier = Modifier.width(6.dp))
+            Box(
+              modifier = Modifier
+                .clip(RoundedCornerShape(6.dp))
+                .background(badgeColor.copy(alpha = 0.2f))
+                .border(0.6.dp, badgeColor, RoundedCornerShape(6.dp))
+                .padding(horizontal = 6.dp, vertical = 1.dp)
+            ) {
+              Text(
+                text = badge,
+                color = badgeColor,
+                fontSize = 9.sp,
+                fontWeight = FontWeight.Black
+              )
+            }
+          }
+        }
+        Text(
+          text = subtitle,
+          color = AronaiTextSecondary,
+          fontSize = 10.5.sp,
+          maxLines = 1
+        )
+      }
+    }
+
+    Icon(
+      imageVector = Icons.Default.ChevronRight,
+      contentDescription = "Go",
+      tint = Color(0xFF475569),
+      modifier = Modifier.size(18.dp)
+    )
   }
 }
 

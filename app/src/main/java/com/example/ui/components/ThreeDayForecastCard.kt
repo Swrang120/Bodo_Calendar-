@@ -58,6 +58,7 @@ fun ThreeDayForecastCard(
   tomorrowEvents: List<CulturalNewsItem>,
   dayAfterEvents: List<CulturalNewsItem>,
   onDeleteEvent: (String) -> Unit,
+  onOpenNotesForDate: (BodoDate) -> Unit = {},
   modifier: Modifier = Modifier
 ) {
   var selectedTab by remember { mutableStateOf(0) } // 0 = Today, 1 = Tomorrow, 2 = Day After
@@ -216,6 +217,38 @@ fun ThreeDayForecastCard(
           fontSize = 10.sp
         )
       }
+    }
+
+    Spacer(modifier = Modifier.height(10.dp))
+
+    // Quick Note & Reminder button for selected forecast day
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(8.dp))
+        .background(AronaiNavy)
+        .border(0.8.dp, AronaiGoldDark, RoundedCornerShape(8.dp))
+        .clickable { onOpenNotesForDate(currentBodoDate) }
+        .padding(horizontal = 10.dp, vertical = 7.dp),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Text("📝", fontSize = 13.sp)
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+          text = "Is din par Note ya Reminder likhein",
+          color = AronaiGoldLight,
+          fontSize = 11.5.sp,
+          fontWeight = FontWeight.SemiBold
+        )
+      }
+      Text(
+        text = "+ Likhein ›",
+        color = AronaiGold,
+        fontSize = 11.sp,
+        fontWeight = FontWeight.Bold
+      )
     }
 
     Spacer(modifier = Modifier.height(10.dp))

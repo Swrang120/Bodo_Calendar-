@@ -36,22 +36,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import android.widget.Toast
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.BodoCalendarViewModel
 import com.example.ui.components.AdminPanelDialog
 import com.example.ui.components.AdMobBanner
+import com.example.ui.components.AllNotesListDialog
 import com.example.ui.components.AppDownloadDialog
 import com.example.ui.components.AppSidebarDrawer
 import com.example.ui.components.AronaiHeader
 import com.example.ui.components.BodoCalendarGrid
+import com.example.ui.components.DateNotesDialog
 import com.example.ui.components.LegalInfoDialog
 import com.example.ui.components.LiveHistoryTicker
 import com.example.ui.components.LiveMetricsBar
 import com.example.ui.components.MonthExplanationDialog
 import com.example.ui.components.SendFeedbackEmailDialog
 import com.example.ui.components.ThreeDayForecastCard
+import com.example.ui.components.TodayReminderAlertPopup
 import com.example.ui.components.UpdateAvailableDialog
 import com.example.ui.theme.AronaiGold
 import com.example.ui.theme.AronaiGoldLight
@@ -74,6 +79,7 @@ class MainActivity : ComponentActivity() {
       MyApplicationTheme(darkTheme = true) {
         val viewModel: BodoCalendarViewModel = viewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val context = LocalContext.current
 
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val coroutineScope = rememberCoroutineScope()
@@ -82,6 +88,7 @@ class MainActivity : ComponentActivity() {
         var feedbackSubtitle by remember { mutableStateOf("") }
         var showPrivacyDialog by remember { mutableStateOf(false) }
         var showTermsDialog by remember { mutableStateOf(false) }
+        var showAllNotesDialog by remember { mutableStateOf(false) }
 
         ModalNavigationDrawer(
           drawerState = drawerState,
@@ -93,6 +100,14 @@ class MainActivity : ComponentActivity() {
               AppSidebarDrawer(
                 onClose = {
                   coroutineScope.launch { drawerState.close() }
+                },
+                savedNotesCount = uiState.savedNotes.size,
+                onOpenNotes = {
+                  showAllNotesDialog = true
+                },
+                onCheckUpdates = {
+                  viewModel.checkForAppUpdates(isManual = true)
+                  Toast.makeText(context, "Checking for latest updates...", Toast.LENGTH_SHORT).show()
                 },
                 onOpenFeedback = { category, subtitle ->
                   feedbackCategory = category
@@ -125,13 +140,14 @@ class MainActivity : ComponentActivity() {
                   .fillMaxSize()
                   .verticalScroll(rememberScrollState())
               ) {
-                // 1. Cultural Header with Bagurumba Photo & Aronai Theme (with Hamburger Menu)
+                // 1. Cultural Header with Bagurumba Photo & Aronai Theme (with Hamburger Menu & Notes Button)
                 AronaiHeader(
                   todayDate = uiState.todayBodoDate,
                   currentRunningMonthEng = uiState.currentRunningMonthEng,
                   onOpenMonthInfo = { viewModel.toggleMonthExplanation(true) },
                   onOpenAdminPanel = { viewModel.toggleAdminDialog(true) },
                   onOpenAppDownload = { viewModel.toggleAppDownloadDialog(true) },
+                  onOpenNotes = { showAllNotesDialog = true },
                   onOpenSidebar = {
                     coroutineScope.launch { drawerState.open() }
                   },
@@ -156,6 +172,11 @@ class MainActivity : ComponentActivity() {
                 tomorrowEvents = uiState.tomorrowEvents,
                 dayAfterEvents = uiState.dayAfterEvents,
                 onDeleteEvent = { id -> viewModel.deleteMessage(id) },
+                onOpenNotesForDate = { date ->
+                  val dateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", date.gregorianYear, date.gregorianMonth, date.gregorianDay)
+                  val dateDisplay = "${date.bodoDay} ${date.bodoMonth.bodoName} (${date.gregorianDay}/${date.gregorianMonth}/${date.gregorianYear})"
+                  viewModel.openDateNotesDialog(dateKey, dateDisplay)
+                },
                 modifier = Modifier.testTag("three_day_forecast_card")
               )
 
@@ -170,6 +191,12 @@ class MainActivity : ComponentActivity() {
                 onNextMonth = { viewModel.nextMonth() },
                 onGoToToday = { viewModel.goToToday() },
                 onOpenMonthInfo = { viewModel.toggleMonthExplanation(true) },
+                datesWithNotes = uiState.datesWithNotes,
+                onOpenNotesForDate = { date ->
+                  val dateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", date.gregorianYear, date.gregorianMonth, date.gregorianDay)
+                  val dateDisplay = "${date.bodoDay} ${date.bodoMonth.bodoName} (${date.gregorianDay}/${date.gregorianMonth}/${date.gregorianYear})"
+                  viewModel.openDateNotesDialog(dateKey, dateDisplay)
+                },
                 modifier = Modifier.testTag("bodo_calendar_grid")
               )
 
@@ -211,6 +238,59 @@ class MainActivity : ComponentActivity() {
             if (uiState.showAppDownloadDialog) {
               AppDownloadDialog(
                 onDismiss = { viewModel.toggleAppDownloadDialog(false) }
+              )
+            }
+
+            // Date-wise Notes & Reminder Dialog
+            uiState.activeNoteDialogDateKey?.let { dateKey ->
+              DateNotesDialog(
+                dateKey = dateKey,
+                dateDisplayTitle = uiState.activeNoteDialogDisplay,
+                notes = uiState.savedNotes.filter { it.dateKey == dateKey },
+                onAddNote = { title, content ->
+                  viewModel.addNoteForDate(dateKey, title, content)
+                },
+                onDeleteNote = { id ->
+                  viewModel.deleteNote(id)
+                },
+                onToggleComplete = { id ->
+                  viewModel.toggleNoteComplete(id)
+                },
+                onDismiss = { viewModel.closeDateNotesDialog() }
+              )
+            }
+
+            // Automatic Today Reminder Audio Alert Popup Dialog
+            uiState.todayReminderAlertNotes?.let { notes ->
+              val todayBodo = uiState.todayBodoDate
+              val todayDisplay = "${todayBodo.bodoDay} ${todayBodo.bodoMonth.bodoName} (${todayBodo.bodoMonth.devanagariName}) • ${todayBodo.gregorianDay}/${todayBodo.gregorianMonth}/${todayBodo.gregorianYear}"
+              TodayReminderAlertPopup(
+                todayDateDisplay = todayDisplay,
+                notes = notes,
+                onAcknowledge = { viewModel.acknowledgeTodayReminder() },
+                onOpenNotesManager = {
+                  viewModel.acknowledgeTodayReminder()
+                  showAllNotesDialog = true
+                }
+              )
+            }
+
+            // All Notes & Reminders list overview dialog
+            if (showAllNotesDialog) {
+              AllNotesListDialog(
+                allNotes = uiState.savedNotes,
+                onOpenDateNotes = { dateKey, dateDisplay ->
+                  showAllNotesDialog = false
+                  viewModel.openDateNotesDialog(dateKey, dateDisplay)
+                },
+                onAddNewNote = {
+                  showAllNotesDialog = false
+                  val sel = uiState.selectedDate
+                  val dateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", sel.gregorianYear, sel.gregorianMonth, sel.gregorianDay)
+                  val display = "${sel.bodoDay} ${sel.bodoMonth.bodoName} (${sel.gregorianDay}/${sel.gregorianMonth}/${sel.gregorianYear})"
+                  viewModel.openDateNotesDialog(dateKey, display)
+                },
+                onDismiss = { showAllNotesDialog = false }
               )
             }
 

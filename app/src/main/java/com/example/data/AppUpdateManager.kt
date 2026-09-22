@@ -19,7 +19,10 @@ object AppUpdateManager {
   // Checks latest version.json on GitHub Pages
   private const val VERSION_CHECK_URL = "https://swrang120.github.io/Bodo_Calendar-/version.json"
 
-  suspend fun checkForUpdates(currentVersionCode: Int): AppUpdateInfo? = withContext(Dispatchers.IO) {
+  /**
+   * Fetches latest version info from remote server without comparing.
+   */
+  suspend fun fetchLatestRemoteInfo(): AppUpdateInfo? = withContext(Dispatchers.IO) {
     try {
       val url = URL(VERSION_CHECK_URL)
       val connection = (url.openConnection() as HttpURLConnection).apply {
@@ -34,20 +37,26 @@ object AppUpdateManager {
         val json = JSONObject(jsonStr)
         val latestVersionCode = json.optInt("versionCode", 1)
 
-        if (latestVersionCode > currentVersionCode) {
-          return@withContext AppUpdateInfo(
-            versionCode = latestVersionCode,
-            versionName = json.optString("versionName", "2.0"),
-            title = json.optString("title", "New Update Available!"),
-            releaseNotes = json.optString("releaseNotes", "New features & performance improvements available."),
-            apkUrl = json.optString("apkUrl", "https://swrang120.github.io/Bodo_Calendar-/app-debug.apk"),
-            forceUpdate = json.optBoolean("forceUpdate", false)
-          )
-        }
+        return@withContext AppUpdateInfo(
+          versionCode = latestVersionCode,
+          versionName = json.optString("versionName", "2.0"),
+          title = json.optString("title", "New Update Available!"),
+          releaseNotes = json.optString("releaseNotes", "New features & performance improvements available."),
+          apkUrl = json.optString("apkUrl", "https://swrang120.github.io/Bodo_Calendar-/app-debug.apk"),
+          forceUpdate = json.optBoolean("forceUpdate", false)
+        )
       }
-    } catch (e: Exception) {
+    } catch (_: Exception) {
       // Network not available or error - fail gracefully
     }
     null
+  }
+
+  suspend fun checkForUpdates(currentVersionCode: Int): AppUpdateInfo? {
+    val remote = fetchLatestRemoteInfo() ?: return null
+    if (remote.versionCode > currentVersionCode) {
+      return remote
+    }
+    return null
   }
 }

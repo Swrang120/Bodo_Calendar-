@@ -1,8 +1,10 @@
 package com.example.ui
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.BuildConfig
 import com.example.data.AppUpdateInfo
 import com.example.data.AppUpdateManager
 import com.example.data.BodoDate
@@ -10,7 +12,9 @@ import com.example.data.BodoHistoryDatabase
 import com.example.data.BodoMonth
 import com.example.data.BodoSolarCalendar
 import com.example.data.CulturalNewsItem
+import com.example.data.DateNote
 import com.example.data.SupabaseManager
+import com.example.data.UserNotesManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,37 +46,133 @@ data class CalendarUiState(
   val showAdminDialog: Boolean = false,
   val showAppDownloadDialog: Boolean = false,
   val adminPublishStatus: String? = null,
-  val availableUpdate: AppUpdateInfo? = null
+  val availableUpdate: AppUpdateInfo? = null,
+  val upToDateNotice: String? = null,
+  // User Notes & Reminders
+  val savedNotes: List<DateNote> = emptyList(),
+  val datesWithNotes: Set<String> = emptySet(),
+  val activeNoteDialogDateKey: String? = null,
+  val activeNoteDialogDisplay: String = "",
+  val todayReminderAlertNotes: List<DateNote>? = null
 )
 
 class BodoCalendarViewModel(application: Application) : AndroidViewModel(application) {
 
   private val supabaseManager = SupabaseManager(application)
+  private val userNotesManager = UserNotesManager(application)
+  private val updatePrefs = application.getSharedPreferences("app_update_prefs", Context.MODE_PRIVATE)
 
   private val _uiState = MutableStateFlow(CalendarUiState())
   val uiState: StateFlow<CalendarUiState> = _uiState.asStateFlow()
 
   init {
+    refreshNotes()
     refreshCalendarData()
     startMidnightAutoRolloverEngine()
     startLiveTickerRotation()
     syncCloudAnnouncements()
-    checkForAppUpdates()
+    checkForAppUpdates(isManual = false)
+    checkTodayReminders(forceAlert = false)
   }
 
-  fun checkForAppUpdates() {
+  // --- Date Notes & Reminders Management ---
+
+  fun refreshNotes() {
+    val allNotes = userNotesManager.getAllNotes()
+    val datesWithNotes = userNotesManager.getDatesWithNotes()
+    _uiState.value = _uiState.value.copy(
+      savedNotes = allNotes,
+      datesWithNotes = datesWithNotes
+    )
+  }
+
+  fun checkTodayReminders(forceAlert: Boolean = false) {
+    val unacknowledgedNotes = userNotesManager.hasUnacknowledgedNotesForToday()
+    if (unacknowledgedNotes.isNotEmpty()) {
+      if (forceAlert || !userNotesManager.isReminderShownToday()) {
+        userNotesManager.playReminderSound()
+        val todayBodo = _uiState.value.todayBodoDate
+        val dateDisplay = "${todayBodo.bodoDay} ${todayBodo.bodoMonth.bodoName} • ${todayBodo.gregorianDay}/${todayBodo.gregorianMonth}/${todayBodo.gregorianYear}"
+        userNotesManager.showAndroidStatusNotification(unacknowledgedNotes, dateDisplay)
+        _uiState.value = _uiState.value.copy(
+          todayReminderAlertNotes = unacknowledgedNotes
+        )
+      }
+    }
+  }
+
+  fun acknowledgeTodayReminder() {
+    userNotesManager.markReminderShownToday()
+    _uiState.value = _uiState.value.copy(todayReminderAlertNotes = null)
+  }
+
+  fun openDateNotesDialog(dateKey: String, dateDisplayTitle: String) {
+    _uiState.value = _uiState.value.copy(
+      activeNoteDialogDateKey = dateKey,
+      activeNoteDialogDisplay = dateDisplayTitle
+    )
+  }
+
+  fun closeDateNotesDialog() {
+    _uiState.value = _uiState.value.copy(activeNoteDialogDateKey = null)
+  }
+
+  fun addNoteForDate(dateKey: String, title: String, content: String) {
+    val bodoDisplay = _uiState.value.activeNoteDialogDisplay
+    userNotesManager.addNote(dateKey, bodoDisplay, title, content)
+    refreshNotes()
+    // If note is for today, check reminders
+    val todayKey = userNotesManager.getTodayDateKey()
+    if (dateKey == todayKey) {
+      checkTodayReminders(forceAlert = true)
+    }
+  }
+
+  fun deleteNote(id: String) {
+    userNotesManager.deleteNote(id)
+    refreshNotes()
+  }
+
+  fun toggleNoteComplete(id: String) {
+    userNotesManager.toggleComplete(id)
+    refreshNotes()
+  }
+
+  // --- App Update Management ---
+
+  /**
+   * Only show update dialog when remote version is actually higher than the current build!
+   * Respects user's dismissal so it does not annoy on every app open.
+   */
+  fun checkForAppUpdates(isManual: Boolean = false) {
     viewModelScope.launch {
-      // Version code for current installed build
-      val currentVersionCode = 1
+      val currentVersionCode = BuildConfig.VERSION_CODE
       val update = AppUpdateManager.checkForUpdates(currentVersionCode)
       if (update != null) {
-        _uiState.value = _uiState.value.copy(availableUpdate = update)
+        val lastDismissed = updatePrefs.getInt("dismissed_version_code", 0)
+        if (isManual || update.versionCode > lastDismissed) {
+          _uiState.value = _uiState.value.copy(availableUpdate = update)
+        }
+      } else if (isManual) {
+        _uiState.value = _uiState.value.copy(
+          upToDateNotice = "Aapka app pehle se hi latest version par hai (v${BuildConfig.VERSION_NAME})!"
+        )
+        delay(3500L)
+        _uiState.value = _uiState.value.copy(upToDateNotice = null)
       }
     }
   }
 
   fun dismissUpdateDialog() {
+    val update = _uiState.value.availableUpdate
+    if (update != null) {
+      updatePrefs.edit().putInt("dismissed_version_code", update.versionCode).apply()
+    }
     _uiState.value = _uiState.value.copy(availableUpdate = null)
+  }
+
+  fun clearUpToDateNotice() {
+    _uiState.value = _uiState.value.copy(upToDateNotice = null)
   }
 
   /**
@@ -139,40 +239,24 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
 
         if (currentDay != lastRecordedDay) {
           lastRecordedDay = currentDay
-          viewModelScope.launch(Dispatchers.Main) {
-            refreshCalendarData()
-          }
+          refreshCalendarData()
+          checkTodayReminders(forceAlert = false)
         }
 
-        // Calculate time to next midnight
-        val nextMidnight = Calendar.getInstance().apply {
-          add(Calendar.DAY_OF_YEAR, 1)
-          set(Calendar.HOUR_OF_DAY, 0)
-          set(Calendar.MINUTE, 0)
-          set(Calendar.SECOND, 0)
-          set(Calendar.MILLISECOND, 0)
-        }
-        val msUntilMidnight = (nextMidnight.timeInMillis - now.timeInMillis).coerceAtLeast(1000L)
-
-        // Delay until midnight or periodic 10-second check
-        val sleepDuration = minOf(msUntilMidnight, 10_000L)
-        delay(sleepDuration)
+        val millisUntilNextMinute = 60_000L - (now.get(Calendar.SECOND) * 1000L + now.get(Calendar.MILLISECOND))
+        delay(millisUntilNextMinute.coerceAtLeast(1000L))
       }
     }
   }
 
-  /**
-   * Rotates live ticker message every 6 seconds
-   */
   private fun startLiveTickerRotation() {
-    viewModelScope.launch(Dispatchers.Default) {
+    viewModelScope.launch {
       while (isActive) {
         delay(6000L)
-        val size = _uiState.value.liveMessages.size
-        if (size > 1) {
-          _uiState.value = _uiState.value.copy(
-            liveTickerIndex = (_uiState.value.liveTickerIndex + 1) % size
-          )
+        val msgs = _uiState.value.liveMessages
+        if (msgs.isNotEmpty()) {
+          val next = (_uiState.value.liveTickerIndex + 1) % msgs.size
+          _uiState.value = _uiState.value.copy(liveTickerIndex = next)
         }
       }
     }
@@ -180,34 +264,9 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
 
   private fun syncCloudAnnouncements() {
     viewModelScope.launch {
-      val remote = supabaseManager.fetchSupabaseAnnouncements()
-      if (remote.isNotEmpty()) {
-        val current = _uiState.value.liveMessages.toMutableList()
-        remote.forEach { item ->
-          if (current.none { it.id == item.id } && !supabaseManager.isMessageDeleted(item.id)) {
-            current.add(0, item)
-          }
-        }
-        _uiState.value = _uiState.value.copy(liveMessages = current)
-      }
+      supabaseManager.fetchCloudAnnouncements()
+      refreshCalendarData()
     }
-  }
-
-  /**
-   * Month Navigation
-   */
-  fun previousMonth() {
-    var y = _uiState.value.displayedYear
-    var m = _uiState.value.displayedMonth - 1
-    if (m < 1) {
-      m = 12
-      y -= 1
-    }
-    _uiState.value = _uiState.value.copy(
-      displayedYear = y,
-      displayedMonth = m,
-      monthDays = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
-    )
   }
 
   fun nextMonth() {
@@ -215,24 +274,44 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     var m = _uiState.value.displayedMonth + 1
     if (m > 12) {
       m = 1
-      y += 1
+      y++
     }
+    val days = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
     _uiState.value = _uiState.value.copy(
       displayedYear = y,
       displayedMonth = m,
-      monthDays = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
+      monthDays = days
     )
   }
+
+  fun prevMonth() {
+    var y = _uiState.value.displayedYear
+    var m = _uiState.value.displayedMonth - 1
+    if (m < 1) {
+      m = 12
+      y--
+    }
+    val days = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
+    _uiState.value = _uiState.value.copy(
+      displayedYear = y,
+      displayedMonth = m,
+      monthDays = days
+    )
+  }
+
+  fun previousMonth() = prevMonth()
 
   fun goToToday() {
     val now = Calendar.getInstance()
     val y = now.get(Calendar.YEAR)
     val m = now.get(Calendar.MONTH) + 1
+    val days = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
+    val today = BodoSolarCalendar.convertToBodoDate(now)
     _uiState.value = _uiState.value.copy(
       displayedYear = y,
       displayedMonth = m,
-      selectedDate = BodoSolarCalendar.convertToBodoDate(now),
-      monthDays = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
+      monthDays = days,
+      selectedDate = today
     )
   }
 
@@ -240,9 +319,6 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     _uiState.value = _uiState.value.copy(selectedDate = date)
   }
 
-  /**
-   * User can delete/dismiss any live cultural message or announcement
-   */
   fun deleteMessage(id: String) {
     supabaseManager.markMessageDeleted(id)
     val updated = _uiState.value.liveMessages.filter { it.id != id }
@@ -255,9 +331,6 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     )
   }
 
-  /**
-   * Publish custom announcement from Admin Panel
-   */
   fun publishAdminAnnouncement(
     title: String,
     bodoTitle: String,

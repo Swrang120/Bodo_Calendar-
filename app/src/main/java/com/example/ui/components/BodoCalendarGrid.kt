@@ -59,6 +59,8 @@ fun BodoCalendarGrid(
   onNextMonth: () -> Unit,
   onGoToToday: () -> Unit,
   onOpenMonthInfo: () -> Unit,
+  datesWithNotes: Set<String> = emptySet(),
+  onOpenNotesForDate: (BodoDate) -> Unit = {},
   modifier: Modifier = Modifier
 ) {
   val engMonthName = when (displayedMonth) {
@@ -237,10 +239,13 @@ fun BodoCalendarGrid(
             val isSelected = bodoDate.gregorianDay == selectedDate.gregorianDay &&
                 bodoDate.gregorianMonth == selectedDate.gregorianMonth &&
                 bodoDate.gregorianYear == selectedDate.gregorianYear
+            val cellDateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", bodoDate.gregorianYear, bodoDate.gregorianMonth, bodoDate.gregorianDay)
+            val hasNote = datesWithNotes.contains(cellDateKey)
 
             BodoDayCell(
               date = bodoDate,
               isSelected = isSelected,
+              hasNote = hasNote,
               onClick = { onDateSelected(bodoDate) },
               modifier = Modifier.weight(1f)
             )
@@ -253,7 +258,13 @@ fun BodoCalendarGrid(
 
     // Selected Date Details card
     Spacer(modifier = Modifier.height(10.dp))
-    SelectedDateDetailBanner(date = selectedDate)
+    val selectedDateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", selectedDate.gregorianYear, selectedDate.gregorianMonth, selectedDate.gregorianDay)
+    val selectedHasNote = datesWithNotes.contains(selectedDateKey)
+    SelectedDateDetailBanner(
+      date = selectedDate,
+      hasNote = selectedHasNote,
+      onOpenNotes = { onOpenNotesForDate(selectedDate) }
+    )
   }
 }
 
@@ -261,11 +272,13 @@ fun BodoCalendarGrid(
  * Calendar Cell with:
  * - BODO DATE LARGE (batha)
  * - ENGLISH DATE SMALL (chota)
+ * - NOTE BADGE (📝)
  */
 @Composable
 fun BodoDayCell(
   date: BodoDate,
   isSelected: Boolean,
+  hasNote: Boolean = false,
   onClick: () -> Unit,
   modifier: Modifier = Modifier
 ) {
@@ -299,6 +312,15 @@ fun BodoDayCell(
       .clickable { onClick() }
       .padding(3.dp)
   ) {
+    // Note badge indicator in top-left
+    if (hasNote) {
+      Text(
+        text = "📝",
+        fontSize = 8.sp,
+        modifier = Modifier.align(Alignment.TopStart)
+      )
+    }
+
     // English date in top-right corner (SMALL, CHOTA)
     Text(
       text = "${date.gregorianDay}",
@@ -339,65 +361,105 @@ fun BodoDayCell(
 }
 
 @Composable
-fun SelectedDateDetailBanner(date: BodoDate) {
-  Row(
+fun SelectedDateDetailBanner(
+  date: BodoDate,
+  hasNote: Boolean = false,
+  onOpenNotes: () -> Unit = {}
+) {
+  Column(
     modifier = Modifier
       .fillMaxWidth()
-      .clip(RoundedCornerShape(10.dp))
+      .clip(RoundedCornerShape(12.dp))
       .background(AronaiNavy)
-      .border(1.dp, AronaiGoldDark, RoundedCornerShape(10.dp))
-      .padding(10.dp),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
+      .border(1.dp, AronaiGoldDark, RoundedCornerShape(12.dp))
+      .padding(12.dp)
   ) {
-    Column {
-      Text(
-        text = "SELECTED DATE DETAILS",
-        color = AronaiGoldLight,
-        fontSize = 9.sp,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 0.5.sp
-      )
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        // Bodo date displayed prominently
+    Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Column {
         Text(
-          text = "${date.bodoDay} ${date.bodoMonth.bodoName} (${date.bodoMonth.devanagariName})",
-          color = Color.White,
-          fontSize = 15.sp,
+          text = "SELECTED DATE DETAILS",
+          color = AronaiGoldLight,
+          fontSize = 9.sp,
+          fontWeight = FontWeight.Bold,
+          letterSpacing = 0.5.sp
+        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+          // Bodo date displayed prominently
+          Text(
+            text = "${date.bodoDay} ${date.bodoMonth.bodoName} (${date.bodoMonth.devanagariName})",
+            color = Color.White,
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Bold
+          )
+        }
+        Text(
+          text = "${date.dayOfWeekBodo} • Bodo San ${date.bodoYear} • ${date.tithi}",
+          color = AronaiWarmWhite.copy(alpha = 0.8f),
+          fontSize = 11.sp
+        )
+        if (date.specialEvent != null) {
+          Text(
+            text = "★ ${date.specialEvent}",
+            color = AronaiGold,
+            fontSize = 11.sp,
+            fontWeight = FontWeight.SemiBold
+          )
+        }
+      }
+
+      Column(horizontalAlignment = Alignment.End) {
+        Text(
+          text = "English Date",
+          color = AronaiTextSecondary,
+          fontSize = 9.sp
+        )
+        Text(
+          text = "${date.gregorianDay}/${date.gregorianMonth}/${date.gregorianYear}",
+          color = AronaiGoldLight,
+          fontSize = 13.sp,
           fontWeight = FontWeight.Bold
         )
-      }
-      Text(
-        text = "${date.dayOfWeekBodo} • Bodo San ${date.bodoYear} • ${date.tithi}",
-        color = AronaiWarmWhite.copy(alpha = 0.8f),
-        fontSize = 11.sp
-      )
-      if (date.specialEvent != null) {
         Text(
-          text = "★ ${date.specialEvent}",
-          color = AronaiGold,
-          fontSize = 11.sp,
-          fontWeight = FontWeight.SemiBold
+          text = date.dayOfWeekEng,
+          color = AronaiTextSecondary,
+          fontSize = 10.sp
         )
       }
     }
 
-    Column(horizontalAlignment = Alignment.End) {
+    Spacer(modifier = Modifier.height(10.dp))
+
+    // Interactive Notes Bar for selected date
+    Row(
+      modifier = Modifier
+        .fillMaxWidth()
+        .clip(RoundedCornerShape(8.dp))
+        .background(AronaiSurface)
+        .border(0.8.dp, if (hasNote) AronaiGold else AronaiSurfaceVariant, RoundedCornerShape(8.dp))
+        .clickable { onOpenNotes() }
+        .padding(horizontal = 10.dp, vertical = 7.dp),
+      horizontalArrangement = Arrangement.SpaceBetween,
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Row(verticalAlignment = Alignment.CenterVertically) {
+        Text("📝", fontSize = 13.sp)
+        Spacer(modifier = Modifier.width(6.dp))
+        Text(
+          text = if (hasNote) "Is din par note likha hua hai (Dekhein / Edit)" else "+ Is din par Note ya Reminder likhein",
+          color = if (hasNote) AronaiGoldLight else AronaiWarmWhite,
+          fontSize = 11.5.sp,
+          fontWeight = FontWeight.SemiBold
+        )
+      }
       Text(
-        text = "English Date",
-        color = AronaiTextSecondary,
-        fontSize = 9.sp
-      )
-      Text(
-        text = "${date.gregorianDay}/${date.gregorianMonth}/${date.gregorianYear}",
-        color = AronaiGoldLight,
-        fontSize = 13.sp,
+        text = if (hasNote) "Kholein ›" else "Likhein ›",
+        color = AronaiGold,
+        fontSize = 11.sp,
         fontWeight = FontWeight.Bold
-      )
-      Text(
-        text = date.dayOfWeekEng,
-        color = AronaiTextSecondary,
-        fontSize = 10.sp
       )
     }
   }

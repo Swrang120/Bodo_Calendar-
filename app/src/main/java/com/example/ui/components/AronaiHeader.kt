@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.EditNote
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Schedule
@@ -56,6 +57,7 @@ fun AronaiHeader(
   onOpenAdminPanel: () -> Unit,
   onOpenAppDownload: () -> Unit,
   onOpenSidebar: () -> Unit = {},
+  onOpenNotes: () -> Unit = {},
   modifier: Modifier = Modifier
 ) {
   Column(modifier = modifier.fillMaxWidth()) {
@@ -64,24 +66,28 @@ fun AronaiHeader(
       modifier = Modifier
         .fillMaxWidth()
         .background(AronaiNavy)
-        .padding(horizontal = 14.dp, vertical = 12.dp),
+        .padding(horizontal = 12.dp, vertical = 10.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        // Hamburger Menu button (Opens Sidebar Drawer)
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.weight(1f, fill = false)
+      ) {
+        // Hamburger Menu button (Opens Sidebar Drawer) - Identical to website button
         IconButton(
           onClick = onOpenSidebar,
           modifier = Modifier
-            .size(38.dp)
-            .clip(CircleShape)
+            .size(40.dp)
+            .clip(RoundedCornerShape(10.dp))
             .background(AronaiSurface)
+            .border(1.2.dp, AronaiGold, RoundedCornerShape(10.dp))
         ) {
           Icon(
             imageVector = Icons.Default.Menu,
             contentDescription = "Open Sidebar Menu",
             tint = AronaiGold,
-            modifier = Modifier.size(22.dp)
+            modifier = Modifier.size(24.dp)
           )
         }
 
@@ -106,16 +112,16 @@ fun AronaiHeader(
         Spacer(modifier = Modifier.width(8.dp))
         Column {
           Text(
-            text = "BODO SAN",
+            text = "BODO SAN CALENDAR",
             color = AronaiGold,
-            fontSize = 15.sp,
+            fontSize = 13.5.sp,
             fontWeight = FontWeight.Black,
             letterSpacing = 0.5.sp
           )
           Text(
-            text = "बड़ो सान • Solar 2026",
-            color = AronaiWarmWhite.copy(alpha = 0.8f),
-            fontSize = 10.sp,
+            text = "बड़ो सान • Traditional Solar Calendar",
+            color = AronaiWarmWhite.copy(alpha = 0.85f),
+            fontSize = 9.sp,
             fontWeight = FontWeight.Medium
           )
         }
@@ -123,11 +129,30 @@ fun AronaiHeader(
 
       // Quick Action Buttons
       Row(verticalAlignment = Alignment.CenterVertically) {
+        // Notes & Reminders button (Quick access to user notes)
+        IconButton(
+          onClick = onOpenNotes,
+          modifier = Modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(AronaiSurface)
+            .border(0.8.dp, AronaiGold.copy(alpha = 0.6f), CircleShape)
+        ) {
+          Icon(
+            imageVector = Icons.Default.EditNote,
+            contentDescription = "Notes & Reminders",
+            tint = AronaiGold,
+            modifier = Modifier.size(20.dp)
+          )
+        }
+
+        Spacer(modifier = Modifier.width(4.dp))
+
         // Month Explanation Info button
         IconButton(
           onClick = onOpenMonthInfo,
           modifier = Modifier
-            .size(38.dp)
+            .size(36.dp)
             .clip(CircleShape)
             .background(AronaiSurface)
         ) {
@@ -135,35 +160,35 @@ fun AronaiHeader(
             imageVector = Icons.Default.Info,
             contentDescription = "Current Month Info",
             tint = AronaiGoldLight,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(19.dp)
           )
         }
 
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         // Download App button
         IconButton(
           onClick = onOpenAppDownload,
           modifier = Modifier
-            .size(38.dp)
+            .size(36.dp)
             .clip(CircleShape)
-            .background(AronaiGreen.copy(alpha = 0.8f))
+            .background(AronaiGreen.copy(alpha = 0.85f))
         ) {
           Icon(
             imageVector = Icons.Default.Download,
             contentDescription = "Download App Option",
             tint = Color.White,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(19.dp)
           )
         }
 
-        Spacer(modifier = Modifier.width(6.dp))
+        Spacer(modifier = Modifier.width(4.dp))
 
         // Admin Panel button
         IconButton(
           onClick = onOpenAdminPanel,
           modifier = Modifier
-            .size(38.dp)
+            .size(36.dp)
             .clip(CircleShape)
             .background(AronaiRed)
         ) {
@@ -171,7 +196,7 @@ fun AronaiHeader(
             imageVector = Icons.Default.AdminPanelSettings,
             contentDescription = "Admin Panel Broadcast",
             tint = Color.White,
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier.size(19.dp)
           )
         }
       }

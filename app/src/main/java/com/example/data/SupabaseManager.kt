@@ -216,4 +216,6 @@ class SupabaseManager(context: Context) {
     }
     return@withContext remoteList
   }
+
+  suspend fun fetchCloudAnnouncements(): List<CulturalNewsItem> = fetchSupabaseAnnouncements()
 }
