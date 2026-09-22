@@ -437,30 +437,45 @@ fun SelectedDateDetailBanner(
     Row(
       modifier = Modifier
         .fillMaxWidth()
-        .clip(RoundedCornerShape(8.dp))
-        .background(AronaiSurface)
-        .border(0.8.dp, if (hasNote) AronaiGold else AronaiSurfaceVariant, RoundedCornerShape(8.dp))
+        .clip(RoundedCornerShape(10.dp))
+        .background(if (hasNote) AronaiGold.copy(alpha = 0.18f) else AronaiSurface)
+        .border(1.dp, if (hasNote) AronaiGold else AronaiGold.copy(alpha = 0.5f), RoundedCornerShape(10.dp))
         .clickable { onOpenNotes() }
-        .padding(horizontal = 10.dp, vertical = 7.dp),
+        .padding(horizontal = 12.dp, vertical = 9.dp),
       horizontalArrangement = Arrangement.SpaceBetween,
       verticalAlignment = Alignment.CenterVertically
     ) {
-      Row(verticalAlignment = Alignment.CenterVertically) {
-        Text("📝", fontSize = 13.sp)
-        Spacer(modifier = Modifier.width(6.dp))
+      Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+        Text("📝", fontSize = 16.sp)
+        Spacer(modifier = Modifier.width(8.dp))
+        Column {
+          Text(
+            text = if (hasNote) "Is din par Note likha hua hai" else "Is din par Note ya Reminder likhein",
+            color = if (hasNote) AronaiGold else AronaiWarmWhite,
+            fontSize = 12.5.sp,
+            fontWeight = FontWeight.Bold
+          )
+          Text(
+            text = if (hasNote) "Dekhein, edit karein ya naya note jodein" else "Tap karein aur kisi bhi event ya kaam ka note likhein",
+            color = AronaiGoldLight,
+            fontSize = 10.sp
+          )
+        }
+      }
+      Spacer(modifier = Modifier.width(8.dp))
+      Box(
+        modifier = Modifier
+          .clip(RoundedCornerShape(8.dp))
+          .background(if (hasNote) AronaiGold else AronaiGreen)
+          .padding(horizontal = 10.dp, vertical = 6.dp)
+      ) {
         Text(
-          text = if (hasNote) "Is din par note likha hua hai (Dekhein / Edit)" else "+ Is din par Note ya Reminder likhein",
-          color = if (hasNote) AronaiGoldLight else AronaiWarmWhite,
+          text = if (hasNote) "Dekhein" else "+ Likhein",
+          color = if (hasNote) AronaiNavy else Color.White,
           fontSize = 11.5.sp,
-          fontWeight = FontWeight.SemiBold
+          fontWeight = FontWeight.Black
         )
       }
-      Text(
-        text = if (hasNote) "Kholein ›" else "Likhein ›",
-        color = AronaiGold,
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Bold
-      )
     }
   }
 }

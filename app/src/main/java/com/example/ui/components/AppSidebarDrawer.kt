@@ -40,6 +40,7 @@ import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material.icons.filled.Visibility
+import com.example.BuildConfig
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.HorizontalDivider
@@ -278,8 +279,8 @@ fun AppSidebarDrawer(
       DrawerMenuItemWithSubtitle(
         icon = Icons.Default.SystemUpdate,
         title = "Check for App Updates",
-        subtitle = "Installed: v2.0 • Tap to check latest build",
-        badge = "v2.0",
+        subtitle = "Installed: v${BuildConfig.VERSION_NAME} (Latest) • Tap to check",
+        badge = "v${BuildConfig.VERSION_NAME}",
         badgeColor = AronaiGreen,
         onClick = {
           onClose()

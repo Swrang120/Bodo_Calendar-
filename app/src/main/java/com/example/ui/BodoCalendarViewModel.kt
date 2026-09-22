@@ -71,7 +71,6 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     startMidnightAutoRolloverEngine()
     startLiveTickerRotation()
     syncCloudAnnouncements()
-    checkForAppUpdates(isManual = false)
     checkTodayReminders(forceAlert = false)
   }
 
@@ -148,14 +147,14 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     viewModelScope.launch {
       val currentVersionCode = BuildConfig.VERSION_CODE
       val update = AppUpdateManager.checkForUpdates(currentVersionCode)
-      if (update != null) {
+      if (update != null && update.versionCode > currentVersionCode) {
         val lastDismissed = updatePrefs.getInt("dismissed_version_code", 0)
         if (isManual || update.versionCode > lastDismissed) {
           _uiState.value = _uiState.value.copy(availableUpdate = update)
         }
       } else if (isManual) {
         _uiState.value = _uiState.value.copy(
-          upToDateNotice = "Aapka app pehle se hi latest version par hai (v${BuildConfig.VERSION_NAME})!"
+          upToDateNotice = "✓ Aapka Bodo Calendar app pehle se hi latest version (v${BuildConfig.VERSION_NAME}) par hai! Naye update ki zaroorat nahi hai."
         )
         delay(3500L)
         _uiState.value = _uiState.value.copy(upToDateNotice = null)

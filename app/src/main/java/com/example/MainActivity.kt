@@ -1,6 +1,7 @@
 package com.example
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -31,6 +32,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +40,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
-import android.widget.Toast
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.BodoCalendarViewModel
@@ -89,6 +90,12 @@ class MainActivity : ComponentActivity() {
         var showPrivacyDialog by remember { mutableStateOf(false) }
         var showTermsDialog by remember { mutableStateOf(false) }
         var showAllNotesDialog by remember { mutableStateOf(false) }
+
+        LaunchedEffect(uiState.upToDateNotice) {
+          uiState.upToDateNotice?.let { notice ->
+            Toast.makeText(context, notice, Toast.LENGTH_LONG).show()
+          }
+        }
 
         ModalNavigationDrawer(
           drawerState = drawerState,
