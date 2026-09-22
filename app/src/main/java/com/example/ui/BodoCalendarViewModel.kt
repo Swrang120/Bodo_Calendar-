@@ -276,10 +276,18 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
       y++
     }
     val days = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
+    val now = Calendar.getInstance()
+    val isTodayInMonth = (now.get(Calendar.YEAR) == y && now.get(Calendar.MONTH) + 1 == m)
+    val newSelected = if (isTodayInMonth) {
+      BodoSolarCalendar.convertToBodoDate(now)
+    } else {
+      days.firstOrNull() ?: _uiState.value.selectedDate
+    }
     _uiState.value = _uiState.value.copy(
       displayedYear = y,
       displayedMonth = m,
-      monthDays = days
+      monthDays = days,
+      selectedDate = newSelected
     )
   }
 
@@ -291,10 +299,18 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
       y--
     }
     val days = BodoSolarCalendar.getDaysForGregorianMonth(y, m)
+    val now = Calendar.getInstance()
+    val isTodayInMonth = (now.get(Calendar.YEAR) == y && now.get(Calendar.MONTH) + 1 == m)
+    val newSelected = if (isTodayInMonth) {
+      BodoSolarCalendar.convertToBodoDate(now)
+    } else {
+      days.firstOrNull() ?: _uiState.value.selectedDate
+    }
     _uiState.value = _uiState.value.copy(
       displayedYear = y,
       displayedMonth = m,
-      monthDays = days
+      monthDays = days,
+      selectedDate = newSelected
     )
   }
 

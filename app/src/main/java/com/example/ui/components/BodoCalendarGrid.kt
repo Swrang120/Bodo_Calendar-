@@ -3,6 +3,7 @@ package com.example.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,10 +27,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -82,6 +88,17 @@ fun BodoCalendarGrid(
   val firstBodoMonth = monthDays.firstOrNull()?.bodoMonth?.bodoName ?: "Ahin"
   val lastBodoMonth = monthDays.lastOrNull()?.bodoMonth?.bodoName ?: "Kati"
 
+  // Active Bodo Date for Header:
+  // If selectedDate is inside the currently viewed month, show selectedDate.
+  // Otherwise, use the 15th of the viewed month (or first day) so the header ALWAYS matches the displayed month!
+  val activeHeaderBodoDate = if (selectedDate.gregorianMonth == displayedMonth && selectedDate.gregorianYear == displayedYear) {
+    selectedDate
+  } else {
+    monthDays.getOrNull(14) ?: monthDays.firstOrNull() ?: selectedDate
+  }
+
+  var dragDistanceX by remember { mutableStateOf(0f) }
+
   Column(
     modifier = modifier
       .fillMaxWidth()
@@ -115,17 +132,17 @@ fun BodoCalendarGrid(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.clickable { onOpenMonthInfo() }
       ) {
-        // Prominent Bodo Month (Matches selected date e.g. Aasin)
+        // Prominent Bodo Month (Always synchronized with active displayed month and selected date)
         Row(verticalAlignment = Alignment.CenterVertically) {
           Text(
-            text = "${selectedDate.bodoMonth.bodoName} (${selectedDate.bodoMonth.devanagariName})",
+            text = "${activeHeaderBodoDate.bodoMonth.bodoName} (${activeHeaderBodoDate.bodoMonth.devanagariName})",
             color = AronaiGold,
             fontSize = 17.sp,
             fontWeight = FontWeight.Black
           )
           Spacer(modifier = Modifier.width(4.dp))
           Text(
-            text = "(${selectedDate.bodoYear} B.S.)",
+            text = "(${activeHeaderBodoDate.bodoYear} B.S.)",
             color = AronaiGoldLight,
             fontSize = 12.sp,
             fontWeight = FontWeight.Bold
@@ -210,47 +227,72 @@ fun BodoCalendarGrid(
 
     Spacer(modifier = Modifier.height(8.dp))
 
-    // Calendar Grid Days
-    // Calculate leading empty spaces for the first day of month
-    val firstDayOfWeek = if (monthDays.isNotEmpty()) {
-      val cal = Calendar.getInstance().apply {
-        set(Calendar.YEAR, displayedYear)
-        set(Calendar.MONTH, displayedMonth - 1)
-        set(Calendar.DAY_OF_MONTH, 1)
-      }
-      cal.get(Calendar.DAY_OF_WEEK) - 1 // 0=Sun..6=Sat
-    } else 0
+    // Calendar Grid Days with Horizontal Slide / Swipe Gesture Support (Sliding switches months seamlessly)
+    Box(
+      modifier = Modifier
+        .fillMaxWidth()
+        .pointerInput(displayedYear, displayedMonth) {
+          detectHorizontalDragGestures(
+            onDragStart = { dragDistanceX = 0f },
+            onDragEnd = {
+              if (dragDistanceX < -40f) {
+                onNextMonth() // Slide Left -> Next Month
+              } else if (dragDistanceX > 40f) {
+                onPrevMonth() // Slide Right -> Previous Month
+              }
+              dragDistanceX = 0f
+            },
+            onDragCancel = { dragDistanceX = 0f },
+            onHorizontalDrag = { change, dragAmount ->
+              change.consume()
+              dragDistanceX += dragAmount
+            }
+          )
+        }
+    ) {
+      Column(modifier = Modifier.fillMaxWidth()) {
+        // Calculate leading empty spaces for the first day of month
+        val firstDayOfWeek = if (monthDays.isNotEmpty()) {
+          val cal = Calendar.getInstance().apply {
+            set(Calendar.YEAR, displayedYear)
+            set(Calendar.MONTH, displayedMonth - 1)
+            set(Calendar.DAY_OF_MONTH, 1)
+          }
+          cal.get(Calendar.DAY_OF_WEEK) - 1 // 0=Sun..6=Sat
+        } else 0
 
-    val totalCells = firstDayOfWeek + monthDays.size
-    val numRows = (totalCells + 6) / 7
+        val totalCells = firstDayOfWeek + monthDays.size
+        val numRows = (totalCells + 6) / 7
 
-    for (row in 0 until numRows) {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(vertical = 2.dp)
-      ) {
-        for (col in 0 until 7) {
-          val cellIndex = row * 7 + col
-          val dayIndex = cellIndex - firstDayOfWeek
+        for (row in 0 until numRows) {
+          Row(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(vertical = 2.dp)
+          ) {
+            for (col in 0 until 7) {
+              val cellIndex = row * 7 + col
+              val dayIndex = cellIndex - firstDayOfWeek
 
-          if (dayIndex in monthDays.indices) {
-            val bodoDate = monthDays[dayIndex]
-            val isSelected = bodoDate.gregorianDay == selectedDate.gregorianDay &&
-                bodoDate.gregorianMonth == selectedDate.gregorianMonth &&
-                bodoDate.gregorianYear == selectedDate.gregorianYear
-            val cellDateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", bodoDate.gregorianYear, bodoDate.gregorianMonth, bodoDate.gregorianDay)
-            val hasNote = datesWithNotes.contains(cellDateKey)
+              if (dayIndex in monthDays.indices) {
+                val bodoDate = monthDays[dayIndex]
+                val isSelected = bodoDate.gregorianDay == selectedDate.gregorianDay &&
+                    bodoDate.gregorianMonth == selectedDate.gregorianMonth &&
+                    bodoDate.gregorianYear == selectedDate.gregorianYear
+                val cellDateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", bodoDate.gregorianYear, bodoDate.gregorianMonth, bodoDate.gregorianDay)
+                val hasNote = datesWithNotes.contains(cellDateKey)
 
-            BodoDayCell(
-              date = bodoDate,
-              isSelected = isSelected,
-              hasNote = hasNote,
-              onClick = { onDateSelected(bodoDate) },
-              modifier = Modifier.weight(1f)
-            )
-          } else {
-            Spacer(modifier = Modifier.weight(1f))
+                BodoDayCell(
+                  date = bodoDate,
+                  isSelected = isSelected,
+                  hasNote = hasNote,
+                  onClick = { onDateSelected(bodoDate) },
+                  modifier = Modifier.weight(1f)
+                )
+              } else {
+                Spacer(modifier = Modifier.weight(1f))
+              }
+            }
           }
         }
       }
