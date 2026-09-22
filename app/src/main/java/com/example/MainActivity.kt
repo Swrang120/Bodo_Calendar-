@@ -330,7 +330,12 @@ class MainActivity : ComponentActivity() {
                 displayedMonth = uiState.displayedMonth,
                 monthDays = uiState.monthDays,
                 selectedDate = uiState.selectedDate,
-                onDateSelected = { date -> viewModel.selectDate(date) },
+                onDateSelected = { date ->
+                  viewModel.selectDate(date)
+                  val dateKey = String.format(java.util.Locale.ENGLISH, "%04d-%02d-%02d", date.gregorianYear, date.gregorianMonth, date.gregorianDay)
+                  val dateDisplay = "${date.bodoDay} ${date.bodoMonth.bodoName} (${date.gregorianDay}/${date.gregorianMonth}/${date.gregorianYear})"
+                  viewModel.openDateNotesDialog(dateKey, dateDisplay)
+                },
                 onPrevMonth = { viewModel.previousMonth() },
                 onNextMonth = { viewModel.nextMonth() },
                 onGoToToday = { viewModel.goToToday() },

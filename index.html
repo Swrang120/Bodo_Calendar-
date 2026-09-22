@@ -628,6 +628,171 @@
       margin-bottom: 2px;
     }
 
+    .day-cell .note-icon-badge {
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      font-size: 8.5px;
+      line-height: 1;
+    }
+
+    /* Date Notes & Reminder Card */
+    .notes-card {
+      margin-top: 10px;
+      background: var(--aronai-surface);
+      border-radius: 14px;
+      border: 1.5px solid var(--aronai-gold);
+      padding: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .notes-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--aronai-gold);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .notes-add-btn {
+      background: var(--aronai-gold);
+      color: #0F172A;
+      font-weight: 800;
+      font-size: 11px;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: transform 0.15s;
+    }
+
+    .notes-add-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .notes-form {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .notes-input, .notes-textarea {
+      background: #0F172A;
+      border: 1px solid var(--aronai-surface-variant);
+      color: #FFFFFF;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .notes-input:focus, .notes-textarea:focus {
+      outline: none;
+      border-color: var(--aronai-gold);
+    }
+
+    .notes-textarea {
+      resize: vertical;
+      min-height: 52px;
+      font-family: inherit;
+    }
+
+    .notes-form-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .notes-save-btn {
+      background: var(--aronai-green);
+      color: #FFFFFF;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .notes-cancel-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--aronai-surface-variant);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .notes-item {
+      background: rgba(15, 23, 42, 0.55);
+      border-radius: 8px;
+      border: 1px solid rgba(51, 65, 85, 0.5);
+      padding: 9px 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .notes-item-title {
+      font-size: 12.5px;
+      font-weight: 800;
+      color: var(--aronai-gold-light);
+    }
+
+    .notes-item-desc {
+      font-size: 11.5px;
+      color: #E2E8F0;
+      margin-top: 3px;
+      white-space: pre-wrap;
+    }
+
+    .notes-item-time {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .notes-item-del-btn {
+      background: rgba(220, 38, 38, 0.2);
+      color: #EF4444;
+      border: 1px solid rgba(220, 38, 38, 0.4);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      white-space: nowrap;
+    }
+
+    .notes-item-del-btn:hover {
+      background: rgba(220, 38, 38, 0.45);
+    }
+
     /* Live Cultural Research Ticker */
     .section-title {
       display: flex;
@@ -1547,6 +1712,34 @@
       </div>
     </div>
 
+    <!-- Dedicated Date Notes & Reminder Card for Selected Date -->
+    <div class="notes-card" id="date-notes-card">
+      <div class="notes-header">
+        <div class="notes-title">
+          <span>📝</span>
+          <span id="notes-date-title">Date Notes & Reminders</span>
+        </div>
+        <button class="notes-add-btn" id="btn-toggle-add-note" onclick="toggleAddNoteForm()">
+          + Note Likhein
+        </button>
+      </div>
+
+      <!-- Add Note Form -->
+      <div class="notes-form" id="notes-add-form" style="display: none;">
+        <input type="text" id="note-input-title" class="notes-input" placeholder="Note ka Naam / Title (e.g. 5 Tarikh Ka Kaam)...">
+        <textarea id="note-input-content" class="notes-textarea" placeholder="Note ki jankari / Yaadasht likhein..."></textarea>
+        <div class="notes-form-actions">
+          <button class="notes-save-btn" onclick="saveCurrentDateNote()">💾 Save Note</button>
+          <button class="notes-cancel-btn" onclick="toggleAddNoteForm(false)">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Notes List for Selected Date -->
+      <div class="notes-list" id="notes-items-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+
     <!-- Calendar Grid Section -->
     <div class="calendar-section">
       <div class="calendar-nav">
@@ -1809,6 +2002,20 @@
     </div>
   </div>
 
+  <!-- Automatic Today Reminder Sound Alert Modal -->
+  <div class="modal-overlay" id="modal-today-reminder">
+    <div class="modal-box" style="border: 2px solid var(--aronai-gold); background: #0F172A; max-width: 440px;">
+      <div class="modal-title" style="background: rgba(245, 158, 11, 0.2); padding: 10px 12px; border-radius: 8px; margin: -6px -6px 12px -6px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 14px; font-weight: 900; color: var(--aronai-gold); display: flex; align-items: center; gap: 6px;">🔔 AAJ KA NOTE & REMINDER!</span>
+        <button class="modal-close" onclick="closeModal('modal-today-reminder')">✕</button>
+      </div>
+      <div style="font-size: 13px; font-weight: 800; color: var(--aronai-gold-light); margin-bottom: 6px;" id="today-reminder-date-heading"></div>
+      <div style="font-size: 12px; color: #CBD5E1; margin-bottom: 12px;">Aapne aaj ki date ke liye yeh note likh kar rakha tha:</div>
+      <div id="today-reminder-notes-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 40vh; overflow-y: auto;"></div>
+      <button class="modal-btn-submit" onclick="closeModal('modal-today-reminder')" style="margin-top: 14px; width: 100%;">Theek Hai, Samajh Gaya (OK)</button>
+    </div>
+  </div>
+
   <script>
     // Supabase Credentials
     const SUPABASE_URL = "https://rwqecmerqyxvgdewfsrv.supabase.co";
@@ -1903,7 +2110,9 @@
       "9-5": { event: "Teachers' Day (Dr. Radhakrishnan Jayanti)", schoolClosed: false, reason: "School Celebration Day (Classes followed by celebration)", puja: "Guru Dakshina & Respect to Teachers", custom: "Students honoring teachers with Aronai and pens." },
       "9-19": { event: "Aasin Solar Sankranti (1 Aasin)", schoolClosed: false, reason: "First Day of Aasin / Swrwt Ritu", puja: "Autumn Transition Veneration", custom: "Autumn crops beginning to blossom, soothing breezes." },
       "9-20": { event: "2 Aasin Solar Day", schoolClosed: false, reason: "Normal Working Day", puja: "Sibrai Bathou Daily Guidance", custom: "Daily farm stewardship across Bodoland." },
-      "9-21": { event: "3 Aasin (Today) • Sombar Bathou Prayer", schoolClosed: false, reason: "Normal School Day (Classes Active)", puja: "Sombar Bathou Sibrai Veneration", custom: "Traditional offering of sacred water and basil to Bathou Siju." },
+      "9-21": { event: "3 Aasin • Sombar Bathou Prayer", schoolClosed: false, reason: "Normal School Day (Classes Active)", puja: "Sombar Bathou Sibrai Veneration", custom: "Traditional offering of sacred water and basil to Bathou Siju." },
+      "9-22": { event: "4 Aasin (Today) • Mongolbar Bathou Solar Day", schoolClosed: false, reason: "Normal school day (Regular classes)", puja: "Daily Sibrai Bathou Prayer with basil and sacred water", custom: "Routine farming, weaving of Aronai & Dokhona, and trade." },
+      "9-23": { event: "5 Aasin • Budhbar Solar Day", schoolClosed: false, reason: "Normal school day (Regular classes)", puja: "Daily Sibrai Bathou Prayer with basil and sacred water", custom: "Routine farming, weaving of Aronai & Dokhona, and trade." },
       "9-27": { event: "Fateha-e-Dwazdaham", schoolClosed: true, reason: "Milad-un-Nabi Holiday", puja: "Prophet Birthday Remembrance", custom: "Prayers for universal brotherhood and charity." },
 
       // Month: 10 (Oct)
@@ -1928,10 +2137,26 @@
       "12-31": { event: "New Year's Eve", schoolClosed: false, reason: "Year End Review", puja: "Gratitude for the Year Passed", custom: "Family gatherings and preparing for January Domasi." }
     };
 
+    // Real-Time Dynamic Date & Key Helpers
+    function getTodayDate() {
+      const now = new Date();
+      if (now.getFullYear() === 2026) {
+        return new Date(2026, now.getMonth(), now.getDate());
+      }
+      return new Date(2026, now.getMonth(), now.getDate());
+    }
+
+    function getDateKey(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
     // Current State
     let displayedYear = 2026;
-    let displayedMonth = 9; // 1-indexed (September)
-    let selectedDate = new Date(2026, 8, 21); // Today (Sep 21, 2026)
+    let displayedMonth = getTodayDate().getMonth() + 1; // 1-indexed
+    let selectedDate = getTodayDate(); // Dynamic today (e.g. Sep 22, 2026)
 
     // User Account System (Saved purely in local browser memory)
     let currentUser = null;
@@ -2317,10 +2542,7 @@
 
     // Reset to Today (Always runs on refresh or button click)
     function resetToToday() {
-      const today = new Date(2026, 8, 21); // In 2026 test environment or live
-      // If current real date matches
-      const realToday = new Date();
-      selectedDate = (realToday.getFullYear() === 2026) ? realToday : new Date(2026, 8, 21);
+      selectedDate = getTodayDate();
       displayedYear = selectedDate.getFullYear();
       displayedMonth = selectedDate.getMonth() + 1;
 
@@ -2328,6 +2550,7 @@
       renderCalendar();
       updateDetectionCard(selectedDate);
       updateDailyBulletin();
+      renderNotesForSelectedDate();
     }
 
     function updateDailyBulletin() {
@@ -2421,14 +2644,15 @@
 
       document.getElementById('nav-eng-title').textContent = `${ENG_MONTH_NAMES[displayedMonth - 1]} ${displayedYear} (English)`;
       
-      // Active Bodo Month matching selected date (e.g. Aasin for Sep 21)
+      // Active Bodo Month matching selected date (e.g. Aasin for Sep 22)
       const activeBodo = (selectedDate.getMonth() + 1 === displayedMonth && selectedDate.getFullYear() === displayedYear)
         ? getBodoDate(selectedDate)
-        : getBodoDate(new Date(displayedYear, displayedMonth - 1, 21));
+        : getBodoDate(new Date(displayedYear, displayedMonth - 1, 15));
 
       document.getElementById('nav-bodo-title').innerHTML = `${activeBodo.bMonthName} <span style="font-size: 13px; font-weight: 700; color: var(--aronai-gold-light);">(${activeBodo.bDevName})</span> • ${activeBodo.bYear} B.S.`;
 
-      const today = new Date(2026, 8, 21);
+      const today = getTodayDate();
+      const allNotes = getUserNotes();
 
       // Empty leading cells
       for (let i = 0; i < startingDay; i++) {
@@ -2446,6 +2670,9 @@
         const isSelected = currDate.toDateString() === selectedDate.toDateString();
         const det = detectDateDetails(currDate);
 
+        const dateKey = getDateKey(currDate);
+        const hasNotes = allNotes.some(n => n.dateKey === dateKey);
+
         const cell = document.createElement('div');
         cell.className = `day-cell ${isSunday ? 'is-sunday' : ''} ${isToday ? 'is-today' : ''} ${isSelected ? 'is-selected' : ''}`;
         cell.onclick = () => selectDate(currDate);
@@ -2457,7 +2684,13 @@
           dotHtml = '<span class="event-dot"></span>';
         }
 
+        let noteBadgeHtml = '';
+        if (hasNotes) {
+          noteBadgeHtml = '<span class="note-icon-badge" title="Note Saved">📝</span>';
+        }
+
         cell.innerHTML = `
+          ${noteBadgeHtml}
           <span class="eng-num">${d}</span>
           <span class="bodo-num">${bDate.bDay}</span>
           ${dotHtml}
@@ -2471,16 +2704,20 @@
       selectedDate = dateObj;
       renderCalendar();
       updateDetectionCard(dateObj);
+      renderNotesForSelectedDate();
+      // Directly open note creation form for this date (e.g. date 5 clicked)
+      toggleAddNoteForm(true);
     }
 
     function selectForecastDay(offset) {
-      const d = new Date(2026, 8, 21);
+      const d = getTodayDate();
       d.setDate(d.getDate() + offset);
       selectedDate = d;
       displayedMonth = d.getMonth() + 1;
       displayedYear = d.getFullYear();
       renderCalendar();
       updateDetectionCard(d);
+      renderNotesForSelectedDate();
     }
 
     function changeMonth(delta) {
@@ -2492,14 +2729,217 @@
         displayedMonth = 1;
         displayedYear++;
       }
-      const today = new Date(2026, 8, 21);
+      const today = getTodayDate();
       if (today.getMonth() + 1 === displayedMonth && today.getFullYear() === displayedYear) {
         selectedDate = today;
       } else {
-        selectedDate = new Date(displayedYear, displayedMonth - 1, 21);
+        selectedDate = new Date(displayedYear, displayedMonth - 1, 1);
       }
       renderCalendar();
       updateDetectionCard(selectedDate);
+      renderNotesForSelectedDate();
+    }
+
+    // User Date Notes & Reminders Engine
+    function getUserNotes() {
+      try {
+        const raw = localStorage.getItem("bodo_user_notes");
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveUserNotes(notes) {
+      try {
+        localStorage.setItem("bodo_user_notes", JSON.stringify(notes));
+      } catch (e) {}
+    }
+
+    function toggleAddNoteForm(show) {
+      const form = document.getElementById("notes-add-form");
+      const btn = document.getElementById("btn-toggle-add-note");
+      if (!form || !btn) return;
+      if (show === undefined) {
+        show = (form.style.display === "none");
+      }
+      form.style.display = show ? "flex" : "none";
+      btn.textContent = show ? "✕ Form Band Karein" : "+ Note Likhein";
+      if (show) {
+        const titleInput = document.getElementById("note-input-title");
+        if (titleInput) {
+          titleInput.focus();
+        }
+      }
+    }
+
+    function saveCurrentDateNote() {
+      const titleEl = document.getElementById("note-input-title");
+      const contentEl = document.getElementById("note-input-content");
+      if (!titleEl || !contentEl) return;
+      const title = titleEl.value.trim();
+      const content = contentEl.value.trim();
+
+      if (!title && !content) {
+        alert("Kripya note ka naam / title ya description zaroor likhein!");
+        return;
+      }
+
+      const bDate = getBodoDate(selectedDate);
+      const newNote = {
+        id: "note_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+        dateKey: getDateKey(selectedDate),
+        bodoDateStr: `${bDate.bDay} ${bDate.bMonthName} (${bDate.bDevName}) • ${bDate.gDay} ${ENG_MONTH_NAMES[bDate.gMonth - 1]} (${bDate.bodoWeekday})`,
+        title: title || "Note",
+        content: content,
+        createdAt: new Date().toISOString(),
+        isCompleted: false
+      };
+
+      const notes = getUserNotes();
+      notes.push(newNote);
+      saveUserNotes(notes);
+
+      titleEl.value = "";
+      contentEl.value = "";
+      toggleAddNoteForm(false);
+      renderNotesForSelectedDate();
+      renderCalendar();
+      alert(`✅ Note safaltapoorvak save ho gaya!\nTarikh: ${newNote.bodoDateStr}`);
+    }
+
+    function deleteNote(noteId) {
+      if (!confirm("Kya aap sach me yeh note delete karna chahte hain?")) {
+        return;
+      }
+      let notes = getUserNotes();
+      notes = notes.filter(n => n.id !== noteId);
+      saveUserNotes(notes);
+      renderNotesForSelectedDate();
+      renderCalendar();
+    }
+
+    function toggleNoteComplete(noteId) {
+      const notes = getUserNotes();
+      const note = notes.find(n => n.id === noteId);
+      if (note) {
+        note.isCompleted = !note.isCompleted;
+        saveUserNotes(notes);
+        renderNotesForSelectedDate();
+      }
+    }
+
+    function renderNotesForSelectedDate() {
+      const dateKey = getDateKey(selectedDate);
+      const bDate = getBodoDate(selectedDate);
+      const allNotes = getUserNotes();
+      const dateNotes = allNotes.filter(n => n.dateKey === dateKey);
+
+      const titleEl = document.getElementById("notes-date-title");
+      if (titleEl) {
+        titleEl.textContent = `${bDate.bDay} ${bDate.bMonthName} / ${bDate.gDay} ${ENG_MONTH_NAMES[bDate.gMonth - 1]} (${bDate.bodoWeekday}) - Notes`;
+      }
+
+      const listEl = document.getElementById("notes-items-list");
+      if (!listEl) return;
+
+      if (dateNotes.length === 0) {
+        listEl.innerHTML = `
+          <div style="text-align: center; padding: 12px 8px; font-size: 12px; color: var(--text-muted); background: rgba(15, 23, 42, 0.4); border-radius: 8px;">
+            Is tarikh ke liye koi note nahi hai.<br>
+            <span style="color: var(--aronai-gold); font-weight: 700; cursor: pointer; text-decoration: underline;" onclick="toggleAddNoteForm(true)">
+              + Yahan tap karke note likhein (Save & Delete option ke sath)
+            </span>
+          </div>
+        `;
+        return;
+      }
+
+      listEl.innerHTML = dateNotes.map(n => `
+        <div class="notes-item" style="${n.isCompleted ? 'opacity: 0.6; text-decoration: line-through;' : ''}">
+          <div style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <input type="checkbox" ${n.isCompleted ? 'checked' : ''} onchange="toggleNoteComplete('${n.id}')" title="Done">
+              <span class="notes-item-title">${escapeHtml(n.title)}</span>
+            </div>
+            ${n.content ? `<div class="notes-item-desc">${escapeHtml(n.content)}</div>` : ''}
+            <div class="notes-item-time">📅 ${n.bodoDateStr}</div>
+          </div>
+          <button class="notes-item-del-btn" onclick="deleteNote('${n.id}')" title="Delete note">
+            🗑️ Delete
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function playNoteReminderSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        if (ctx.state === 'suspended') {
+          ctx.resume();
+        }
+        // Bell chime
+        const osc1 = ctx.createOscillator();
+        const gain1 = ctx.createGain();
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc1.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+        gain1.gain.setValueAtTime(0.35, ctx.currentTime);
+        gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+        osc1.connect(gain1);
+        gain1.connect(ctx.destination);
+        osc1.start(ctx.currentTime);
+        osc1.stop(ctx.currentTime + 0.6);
+
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(1174.66, ctx.currentTime + 0.15);
+        gain2.gain.setValueAtTime(0.3, ctx.currentTime + 0.15);
+        gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        osc2.start(ctx.currentTime + 0.15);
+        osc2.stop(ctx.currentTime + 0.9);
+      } catch (e) {
+        console.log("Audio alert note:", e);
+      }
+    }
+
+    function checkTodayNotesAlert() {
+      const today = getTodayDate();
+      const dateKey = getDateKey(today);
+      const allNotes = getUserNotes();
+      const todayNotes = allNotes.filter(n => n.dateKey === dateKey && !n.isCompleted);
+
+      if (todayNotes.length > 0) {
+        const bDate = getBodoDate(today);
+        const headingEl = document.getElementById("today-reminder-date-heading");
+        if (headingEl) {
+          headingEl.textContent = `📅 ${bDate.bDay} ${bDate.bMonthName} (${bDate.bDevName}) • ${bDate.gDay} ${ENG_MONTH_NAMES[bDate.gMonth - 1]} (${bDate.bodoWeekday})`;
+        }
+        const listEl = document.getElementById("today-reminder-notes-list");
+        if (listEl) {
+          listEl.innerHTML = todayNotes.map(n => `
+            <div style="background: rgba(245, 158, 11, 0.15); border: 1px solid var(--aronai-gold); border-radius: 8px; padding: 10px; display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
+              <div>
+                <div style="font-weight: 800; font-size: 13px; color: var(--aronai-gold);">${escapeHtml(n.title)}</div>
+                ${n.content ? `<div style="font-size: 12px; color: #FFFFFF; margin-top: 3px;">${escapeHtml(n.content)}</div>` : ''}
+              </div>
+              <button class="notes-item-del-btn" onclick="deleteNote('${n.id}'); checkTodayNotesAlert();">🗑️ Delete</button>
+            </div>
+          `).join('');
+        }
+        openModal("modal-today-reminder");
+        playNoteReminderSound();
+      }
     }
 
     // Default News items
@@ -2734,6 +3174,7 @@
       resetToToday();
       renderNews();
       fetchSupabaseAnnouncements();
+      checkTodayNotesAlert();
     };
   </script>
 </body>
