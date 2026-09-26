@@ -373,6 +373,13 @@ fun AronaiHeader(
               fontSize = 10.sp,
               fontWeight = FontWeight.Medium
             )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+              text = "Assamese Solar • " + todayDate.assameseMonthName + " " + todayDate.assameseDay + ", " + todayDate.assameseYear,
+              color = AronaiWarmWhite.copy(alpha = 0.82f),
+              fontSize = 8.5.sp,
+              fontWeight = FontWeight.Medium
+            )
           }
         }
       }
