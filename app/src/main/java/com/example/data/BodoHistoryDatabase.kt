@@ -52,6 +52,41 @@ object BodoHistoryDatabase {
   ): List<CulturalNewsItem> {
     val list = mutableListOf<CulturalNewsItem>()
 
+    // Verified Bodo birth/death anniversaries; these automatically appear in the live 3-day feed.
+    val verifiedAnniversaries = listOf(
+      Triple(1, 2, "Kanakeswar Narzary Birth Anniversary|Kanakeswar Narzary-ni Jonmo San|Birth anniversary: Kanakeswar Narzary (2 January 1943 - 2 October 2003)."),
+      Triple(10, 2, "Kanakeswar Narzary Memorial Day|Kanakeswar Narzary-ni Thwinawi San|Death anniversary: Kanakeswar Narzary, 2 October 2003."),
+      Triple(1, 8, "Sujit Narzary Birth Anniversary|Sujit Narzary-ni Jonmo San|Birth anniversary: Sujit Narzary (8 January 1972 - 12 June 1987)."),
+      Triple(6, 12, "Sujit Narzary Memorial Day|Sujit Narzary-ni Thwinawi San|Death anniversary: Sujit Narzary, 12 June 1987."),
+      Triple(2, 1, "Bir Chilagang Basumatary Birth Anniversary|Bir Chilagang Basumatary-ni Jonmo San|Birth anniversary: Bir Chilagang Basumatary (1 February 1959 - 28 June 1997)."),
+      Triple(6, 28, "Bir Chilagang Basumatary Memorial Day|Bir Chilagang Basumatary-ni Thwinawi San|Death anniversary: Bir Chilagang Basumatary, 28 June 1997."),
+      Triple(2, 11, "Jwhwlao Nileswar Brahma Birth Anniversary|Jwhwlao Nileswar Brahma-ni Jonmo San|Birth anniversary: Jwhwlao Nileswar Brahma (11 February 1927 - 1 January 1986)."),
+      Triple(1, 1, "Jwhwlao Nileswar Brahma Memorial Day|Jwhwlao Nileswar Brahma-ni Thwinawi San|Death anniversary: Jwhwlao Nileswar Brahma, 1 January 1986."),
+      Triple(2, 28, "Subungthini Thandwi Bineswar Brahma Birth Anniversary|Subungthini Thandwi Bineswar Brahma-ni Jonmo San|Birth anniversary: Subungthini Thandwi Bineswar Brahma (28 February 1948 - 19 August 2000)."),
+      Triple(8, 19, "Subungthini Thandwi Bineswar Brahma Memorial Day|Subungthini Thandwi Bineswar Brahma-ni Thwinawi San|Death anniversary: Subungthini Thandwi Bineswar Brahma, 19 August 2000."),
+      Triple(3, 1, "Jwhwlao Swmbla Basumatary Birth Anniversary|Jwhwlao Swmbla Basumatary-ni Jonmo San|Birth anniversary: Jwhwlao Swmbla Basumatary (1 March 1960 - 30 July 1996)."),
+      Triple(7, 30, "Jwhwlao Swmbla Basumatary Memorial Day|Jwhwlao Swmbla Basumatary-ni Thwinawi San|Death anniversary: Jwhwlao Swmbla Basumatary, 30 July 1996."),
+      Triple(6, 1, "Brajendra Kumar Brahma Birth Anniversary|Brajendra Kumar Brahma-ni Jonmo San|Birth anniversary: Brajendra Kumar Brahma (1 June 1943 - 5 December 2019)."),
+      Triple(12, 5, "Brajendra Kumar Brahma Memorial Day|Brajendra Kumar Brahma-ni Thwinawi San|Death anniversary: Brajendra Kumar Brahma, 5 December 2019."),
+      Triple(6, 15, "Rupnath Brahma Birth Anniversary|Rupnath Brahma-ni Jonmo San|Birth anniversary: Rupnath Brahma (15 June 1902 - 23 January 1968)."),
+      Triple(1, 23, "Rupnath Brahma Memorial Day|Rupnath Brahma-ni Thwinawi San|Death anniversary: Rupnath Brahma, 23 January 1968."),
+      Triple(8, 2, "Kamal Kumar Brahma Birth Anniversary|Kamal Kumar Brahma-ni Jonmo San|Birth anniversary: Kamal Kumar Brahma (2 August 1929 - 4 April 2006)."),
+      Triple(4, 4, "Kamal Kumar Brahma Memorial Day|Kamal Kumar Brahma-ni Thwinawi San|Death anniversary: Kamal Kumar Brahma, 4 April 2006."),
+    )
+    verifiedAnniversaries.firstOrNull { it.first == gMonth && it.second == gDay }?.let { item ->
+      val parts = item.third.split("|", limit = 3)
+      list.add(CulturalNewsItem(
+        id = "verified_anniversary_" + gMonth + "_" + gDay,
+        title = parts[0],
+        bodoTitle = parts[1],
+        category = "Bodo History",
+        description = parts[2],
+        bodoDescription = parts[1],
+        dateLabel = dayLabel,
+        fullDate = bMonth.bodoName + " " + bDay + " / " + gDay + "-" + gMonth
+      ))
+    }
+
     // Specific famous dates:
     when {
       // March 31: Bodofa U.N. Brahma Birth
