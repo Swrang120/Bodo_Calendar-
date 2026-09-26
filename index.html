@@ -2596,7 +2596,7 @@
 
       const bulletinEl = document.getElementById("bulletin-text");
       bulletinEl.innerHTML = `
-        <strong>Ajj ki Tarikh:</strong> <span style="color:var(--aronai-gold); font-weight:800;">${bDate.bDay} ${bDate.bMonthName} (${bDate.bDevName})</span> / ${bDate.gDay} September (${bDate.bodoWeekday})<br>
+        <strong>Ajj ki Tarikh:</strong> <span style="color:var(--aronai-gold); font-weight:800;">${bDate.bDay} ${bDate.bMonthName} (${bDate.bDevName})</span> / ${bDate.gDay} ${ENG_MONTH_NAMES[bDate.gMonth - 1]} (${bDate.bodoWeekday})<br>
         <strong>Khas Parva / Puja:</strong> ${det.event} • ${det.puja}<br>
         <strong>School Status:</strong> ${schoolBadge} — ${det.reason}<br>
         <strong>Bodoland Parampara:</strong> ${det.custom}
@@ -3206,6 +3206,30 @@
       setInterval(refreshOnlineUsers, 4500);
     }
 
+    // Lifetime midnight auto-rollover: refresh the live calendar when the local date changes.
+    let lastLiveDateKey = "";
+    function startMidnightAutoRollover() {
+      const tick = () => {
+        const now = getTodayDate();
+        const key = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+        if (!lastLiveDateKey) {
+          lastLiveDateKey = key;
+          return;
+        }
+        if (key !== lastLiveDateKey) {
+          lastLiveDateKey = key;
+          selectedDate = now;
+          displayedYear = now.getFullYear();
+          displayedMonth = now.getMonth() + 1;
+          resetToToday();
+          renderNews();
+          fetchSupabaseAnnouncements();
+        }
+      };
+      tick();
+      setInterval(tick, 30000);
+    }
+
     // Window Init
     window.onload = () => {
       initUserAuth();
@@ -3214,6 +3238,7 @@
       renderNews();
       fetchSupabaseAnnouncements();
       checkTodayNotesAlert();
+      startMidnightAutoRollover();
     };
   </script>
 </body>
