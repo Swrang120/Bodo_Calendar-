@@ -128,7 +128,7 @@ object BodoSolarCalendar {
       val prevCal = Calendar.getInstance().apply { set(prevYear, prevMonth - 1, 1) }
       prevCal.getActualMaximum(Calendar.DAY_OF_MONTH) - prevStart + 1 + gDay
     }
-    val year = if (monthIndex >= 1 && monthIndex <= 9) gYear - 593 else gYear - 594
+    val year = if (monthIndex in 1..8) gYear - 593 else gYear - 594
     return Triple(getAssameseMonthName(actualMonth), day, year)
   }
 
