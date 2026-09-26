@@ -84,6 +84,54 @@ object BodoSolarCalendar {
     }
   }
 
+  private fun getAssameseSolarDate(cal: Calendar): Triple<String, Int, Int> {
+    val gYear = cal.get(Calendar.YEAR)
+    val gMonth = cal.get(Calendar.MONTH) + 1
+    val gDay = cal.get(Calendar.DAY_OF_MONTH)
+
+    // Civil-day starts used by the Assamese solar/Panjika reference.
+    val starts = mapOf(
+      1 to 15, 2 to 14, 3 to 16, 4 to 15, 5 to 16, 6 to 16,
+      7 to 17, 8 to 18, 9 to 18, 10 to 18, 11 to 17, 12 to 17
+    )
+
+    val monthIndex = when {
+      gMonth == 1 && gDay < starts.getValue(1) -> 9
+      gMonth == 2 && gDay < starts.getValue(2) -> 10
+      gMonth == 3 && gDay < starts.getValue(3) -> 11
+      gMonth == 4 && gDay < starts.getValue(4) -> 12
+      gMonth == 5 && gDay < starts.getValue(5) -> 1
+      gMonth == 6 && gDay < starts.getValue(6) -> 2
+      gMonth == 7 && gDay < starts.getValue(7) -> 3
+      gMonth == 8 && gDay < starts.getValue(8) -> 4
+      gMonth == 9 && gDay < starts.getValue(9) -> 5
+      gMonth == 10 && gDay < starts.getValue(10) -> 6
+      gMonth == 11 && gDay < starts.getValue(11) -> 7
+      gMonth == 12 && gDay < starts.getValue(12) -> 8
+      else -> when (gMonth) {
+        1 -> 10; 2 -> 11; 3 -> 12; 4 -> 1; 5 -> 2; 6 -> 3
+        7 -> 4; 8 -> 5; 9 -> 6; 10 -> 7; 11 -> 8; else -> 9
+      }
+    }
+
+    val startDay = if (monthIndex == 10 && gMonth == 1 && gDay < starts.getValue(1)) starts.getValue(1)
+      else if (monthIndex == 11 && gMonth == 2 && gDay < starts.getValue(2)) starts.getValue(2)
+      else if (monthIndex == 12 && gMonth == 3 && gDay < starts.getValue(3)) starts.getValue(3)
+      else if (monthIndex == 1 && gMonth == 4) starts.getValue(4)
+      else starts.getValue(gMonth)
+
+    val actualMonth = BodoMonth.fromIndex(monthIndex)
+    val day = if (gDay >= startDay) gDay - startDay + 1 else {
+      val prevMonth = if (gMonth == 1) 12 else gMonth - 1
+      val prevStart = starts.getValue(prevMonth)
+      val prevYear = if (gMonth == 1) gYear - 1 else gYear
+      val prevCal = Calendar.getInstance().apply { set(prevYear, prevMonth - 1, 1) }
+      prevCal.getActualMaximum(Calendar.DAY_OF_MONTH) - prevStart + 1 + gDay
+    }
+    val year = if (monthIndex >= 1 && monthIndex <= 9) gYear - 593 else gYear - 594
+    return Triple(getAssameseMonthName(actualMonth), day, year)
+  }
+
   private fun getAssameseMonthName(bodoMonth: BodoMonth): String {
     return when (bodoMonth) {
       BodoMonth.BWISAGU -> "Bohag (Boishakh)"
@@ -189,9 +237,10 @@ object BodoSolarCalendar {
         todayCal.get(Calendar.DAY_OF_MONTH) == gDay)
 
     val tithi = calculateTithi(cal)
-    val assameseMonthName = getAssameseMonthName(bodoMonth)
-    val assameseDay = bodoDay.coerceAtLeast(1)
-    val assameseYear = bodoYear
+    val assameseSolar = getAssameseSolarDate(cal)
+    val assameseMonthName = assameseSolar.first
+    val assameseDay = assameseSolar.second
+    val assameseYear = assameseSolar.third
     val assameseCalendarNote = "Assamese Solar Reference: " + assameseMonthName + " " + assameseDay + ", " + assameseYear
 
     return BodoDate(
