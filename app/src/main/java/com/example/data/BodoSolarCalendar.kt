@@ -48,6 +48,11 @@ data class BodoDate(
   val dayOfWeekBodo: String,
   val dayOfWeekEng: String,
   val tithi: String = "",
+  // Assamese solar-calendar cross-reference; display uses English/Bodo only.
+  val assameseMonthName: String = "",
+  val assameseDay: Int = 0,
+  val assameseYear: Int = 0,
+  val assameseCalendarNote: String = "",
   val specialEvent: String? = null,
   val isHoliday: Boolean = false,
   val isToday: Boolean = false
@@ -60,25 +65,39 @@ object BodoSolarCalendar {
   val WEEKDAYS_BODO_SHORT = listOf("Rabi", "Som", "Mongol", "Budh", "Brihos", "Sakru", "Shani")
   val WEEKDAYS_ENG_SHORT = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
 
-  // Traditional Solar Sankranti / Month Transition Day in Gregorian Calendar
-  // month 1 = Jan, 2 = Feb, ... 12 = Dec
-  // For 2026 (Assamese/Bhaskarabda & Bodo Solar Calendar):
-  // Ahin/Aasin begins on September 19, meaning Sep 19 = 1, Sep 20 = 2, Sep 21 = 3!
+  // Bodo San month starts follow the documented traditional date ranges.
   private fun getSankrantiDay(gregorianMonth: Int, year: Int): Int {
     return when (gregorianMonth) {
-      1 -> 15  // Jan 15 -> Magh 1 (Domasi/Magh Bihu)
-      2 -> 14  // Feb 14 -> Fagun 1
-      3 -> 15  // Mar 15 -> Chaitra/Sot 1
-      4 -> 14  // Apr 14 -> Bwisag 1 (Bodo New Year)
-      5 -> 15  // May 15 -> Jeth 1
-      6 -> 16  // Jun 16 -> Aasar/Ahar 1
-      7 -> 17  // Jul 17 -> Sawan/Saon 1
-      8 -> 18  // Aug 18 -> Bhadra/Bhado 1
-      9 -> 19  // Sep 19 -> Aasin/Ahin 1 (Sep 19 = 1, Sep 20 = 2, Sep 21 = 3)
-      10 -> 18 // Oct 18 -> Kati 1
-      11 -> 17 // Nov 17 -> Aghon/Agon 1
-      12 -> 16 // Dec 16 -> Push/Puh 1
-      else -> 15
+      1 -> 16
+      2 -> 16
+      3 -> 16
+      4 -> 15
+      5 -> 16
+      6 -> 16
+      7 -> 16
+      8 -> 16
+      9 -> 16
+      10 -> 16
+      11 -> 16
+      12 -> 16
+      else -> 16
+    }
+  }
+
+  private fun getAssameseMonthName(bodoMonth: BodoMonth): String {
+    return when (bodoMonth) {
+      BodoMonth.BWISAGU -> "Bohag (Boishakh)"
+      BodoMonth.JETH -> "Jeth (Joishtho)"
+      BodoMonth.AHAR -> "Ahar (Asharh)"
+      BodoMonth.SAON -> "Saon (Srabon)"
+      BodoMonth.BHADO -> "Bhadra (Bhadro)"
+      BodoMonth.AHIN -> "Ahin (Aashin)"
+      BodoMonth.KATI -> "Kati (Kartik)"
+      BodoMonth.AGON -> "Aghon (Ogrohaeon)"
+      BodoMonth.PUH -> "Puh (Poush)"
+      BodoMonth.MAGH -> "Magh"
+      BodoMonth.FAGUN -> "Fagun (Falgun)"
+      BodoMonth.SOT -> "Chot (Choitro)"
     }
   }
 
@@ -170,6 +189,10 @@ object BodoSolarCalendar {
         todayCal.get(Calendar.DAY_OF_MONTH) == gDay)
 
     val tithi = calculateTithi(cal)
+    val assameseMonthName = getAssameseMonthName(bodoMonth)
+    val assameseDay = bodoDay.coerceAtLeast(1)
+    val assameseYear = bodoYear
+    val assameseCalendarNote = "Assamese Solar Reference: " + assameseMonthName + " " + assameseDay + ", " + assameseYear
 
     return BodoDate(
       bodoDay = bodoDay,
@@ -181,6 +204,10 @@ object BodoSolarCalendar {
       dayOfWeekBodo = dayOfWeekBodo,
       dayOfWeekEng = dayOfWeekEng,
       tithi = tithi,
+      assameseMonthName = assameseMonthName,
+      assameseDay = assameseDay,
+      assameseYear = assameseYear,
+      assameseCalendarNote = assameseCalendarNote,
       specialEvent = event,
       isHoliday = isHol,
       isToday = isToday
@@ -317,6 +344,6 @@ object BodoSolarCalendar {
       11 -> "November"
       else -> "December"
     }
-    return "English Month: $engMonthName ${bDate.gregorianYear} | Bodo Month: ${bDate.bodoMonth.bodoName} (${bDate.bodoMonth.devanagariName}) Date: ${bDate.bodoDay} | Bodo San Year: ${bDate.bodoYear} (${bDate.bodoMonth.seasonBodo} Ritu)"
+    return "English Month: ${bDate.gregorianYear} ${engMonthName} | Bodo Month: ${bDate.bodoMonth.bodoName} Date: ${bDate.bodoDay} | Assamese Solar: ${bDate.assameseMonthName} ${bDate.assameseDay}, ${bDate.assameseYear} | Bodo San: ${bDate.bodoYear} (${bDate.bodoMonth.seasonBodo} Ritu)"
   }
 }
