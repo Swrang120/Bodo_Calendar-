@@ -72,6 +72,9 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
     startLiveTickerRotation()
     syncCloudAnnouncements()
     checkTodayReminders(forceAlert = false)
+    // Automatically check GitHub for a newer APK when the app starts.
+    checkForAppUpdates(isManual = false)
+    startAutomaticUpdateChecker()
   }
 
   // --- Date Notes & Reminders Management ---
@@ -158,6 +161,21 @@ class BodoCalendarViewModel(application: Application) : AndroidViewModel(applica
         )
         delay(3500L)
         _uiState.value = _uiState.value.copy(upToDateNotice = null)
+      }
+    }
+  }
+
+  /**
+   * Periodically checks the GitHub-hosted version manifest so users do not
+   * need to open the sidebar manually to discover a new APK.
+   */
+  private fun startAutomaticUpdateChecker() {
+    viewModelScope.launch(Dispatchers.IO) {
+      while (isActive) {
+        delay(30 * 60 * 1000L)
+        if (isActive) {
+          checkForAppUpdates(isManual = false)
+        }
       }
     }
   }
