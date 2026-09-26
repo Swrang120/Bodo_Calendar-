@@ -17,7 +17,7 @@ data class AppUpdateInfo(
 
 object AppUpdateManager {
   // Checks latest version.json on GitHub Pages
-  private const val VERSION_CHECK_URL = "https://swrang120.github.io/Bodo_Calendar-/version.json"
+  private const val VERSION_CHECK_URL = "https://raw.githubusercontent.com/Swrang120/Bodo-Calendar-App/main/version.json"
 
   /**
    * Fetches latest version info from remote server without comparing.
@@ -43,7 +43,7 @@ object AppUpdateManager {
           versionName = json.optString("versionName", "2.0"),
           title = json.optString("title", "New Update Available!"),
           releaseNotes = json.optString("releaseNotes", "New features & performance improvements available."),
-          apkUrl = json.optString("apkUrl", "https://swrang120.github.io/Bodo_Calendar-/app-debug.apk"),
+          apkUrl = json.optString("apkUrl", "https://github.com/Swrang120/Bodo-Calendar-App/raw/refs/heads/main/app-debug.apk"),
           forceUpdate = json.optBoolean("forceUpdate", false)
         )
       }
