@@ -24,7 +24,8 @@ object AppUpdateManager {
    */
   suspend fun fetchLatestRemoteInfo(): AppUpdateInfo? = withContext(Dispatchers.IO) {
     try {
-      val url = URL(VERSION_CHECK_URL)
+      // Cache-bust the GitHub Pages manifest so a fresh version is checked.
+      val url = URL("$VERSION_CHECK_URL?t=${System.currentTimeMillis()}")
       val connection = (url.openConnection() as HttpURLConnection).apply {
         connectTimeout = 6000
         readTimeout = 6000
