@@ -1,8 +1,8 @@
 {
-  "versionCode": 4,
-  "versionName": "2.2",
-  "title": "Bodo Calendar v2.2 — Quick Update Available",
-  "releaseNotes": "Quick update system is now connected to the dedicated Bodo Calendar update repository.",
-  "apkUrl": "https://raw.githubusercontent.com/Swrang120/Bodo-Calendar-App/main/app-debug.apk",
+  "versionCode": 3,
+  "versionName": "2.1",
+  "title": "Bodo Calendar v2.1 (Notes & Sound Alert)",
+  "releaseNotes": "1. Date-wise Notes & Reminder with audio sound alert pop-up\n2. App launch opening animation with welcome cultural sound\n3. Full sidebar features and offline support\n4. Accurate 2026 Bodo Solar Calendar",
+  "apkUrl": "https://swrang120.github.io/Bodo_Calendar-/app-debug.apk",
   "forceUpdate": false
 }
