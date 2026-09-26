@@ -2061,6 +2061,13 @@
     const WEEKDAYS_ENG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const ENG_MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+    // Assamese Panjika live reference for the current 2026 cycle.
+    // Names are intentionally kept in English/Bodo transliteration; no Assamese script is rendered.
+    const ASSAMESE_SOLAR_EVENTS_2026 = {
+      "9-26": { event: "Anvadhan • Assamese Panjika", puja: "Purnima observance", reason: "Assamese calendar observance", custom: "Ahin 9, 1433 • Shukla Purnima" },
+      "9-27": { event: "Ishti • Assamese Panjika", puja: "Daily Panjika observance", reason: "Assamese calendar observance", custom: "Ahin 10, 1433 • Krishna Pratipada" }
+    };
+
     // KNOWLEDGE BASE: Assam & Bodo Cultural Calendar & Official Holidays
     const CALENDAR_INTELLIGENCE_2026 = {
       // Month: 1 (Jan)
@@ -2516,14 +2523,16 @@
 
       const key = `${gMonth}-${gDay}`;
       const staticEvent = CALENDAR_INTELLIGENCE_2026[key];
+      const assameseEvent = ASSAMESE_SOLAR_EVENTS_2026[key];
 
-      if (staticEvent) {
+      if (staticEvent || assameseEvent) {
+        const sourceEvent = staticEvent || assameseEvent;
         return {
-          event: staticEvent.event,
-          schoolClosed: staticEvent.schoolClosed,
-          reason: staticEvent.reason,
-          puja: staticEvent.puja,
-          custom: staticEvent.custom,
+          event: sourceEvent.event,
+          schoolClosed: staticEvent ? staticEvent.schoolClosed : false,
+          reason: sourceEvent.reason,
+          puja: sourceEvent.puja,
+          custom: sourceEvent.custom,
           bDate: bDate
         };
       }
