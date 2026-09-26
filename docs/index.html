@@ -1647,11 +1647,15 @@
           <div>
             <div style="font-size: 10px; color: var(--aronai-gold-light); font-weight: 800; letter-spacing: 1px;">AJJ KA DIN / DIN-LIR</div>
             <div class="bodo-date-main" id="hero-bodo-date">
-              3 Aasin <span class="bodo-date-dev">(आसिन / आहिन)</span>
+              11 Aasin <span class="bodo-date-dev">(आसिन / आहिन)</span>
             </div>
             <div class="bodo-year-sub" id="hero-bodo-year">
               Bodo San 1433 • Swrwt Ritu (Autumn)
             </div>
+          </div>
+          <div id="live-calendar-sync" style="margin-top:8px; padding:8px 10px; border:1px solid rgba(212,175,55,.45); border-radius:10px; background:rgba(15,23,42,.78); color:#fff; font-size:10px; line-height:1.45;">
+            <div style="font-weight:800; color:var(--aronai-gold-light);">LIVE CALENDAR SYNC</div>
+            <div id="live-calendar-sync-text">English: September 2026 • Bodo: Aasin • Assamese Solar: Ahin</div>
           </div>
           <div class="english-date-pill" onclick="resetToToday()">
             <div class="lbl">English Date</div>
@@ -1667,16 +1671,16 @@
       <div class="forecast-card today" id="card-today" onclick="selectForecastDay(0)">
         <div class="forecast-day-label">AJJ (TODAY)</div>
         <div class="forecast-bodo-date" id="fc-today-bodo">3 Aasin</div>
-        <div class="forecast-eng-date" id="fc-today-eng">21 Sep • Mon</div>
+        <div class="forecast-eng-date" id="fc-today-eng">26 Sep • Sat</div>
       </div>
       <div class="forecast-card" id="card-tomorrow" onclick="selectForecastDay(1)">
         <div class="forecast-day-label">GABUN (TOMORROW)</div>
-        <div class="forecast-bodo-date" id="fc-tomorrow-bodo">4 Aasin</div>
-        <div class="forecast-eng-date" id="fc-tomorrow-eng">22 Sep • Tue</div>
+        <div class="forecast-bodo-date" id="fc-tomorrow-bodo">12 Aasin</div>
+        <div class="forecast-eng-date" id="fc-tomorrow-eng">27 Sep • Sun</div>
       </div>
       <div class="forecast-card" id="card-dayafter" onclick="selectForecastDay(2)">
         <div class="forecast-day-label">SAMPOI (DAY AFTER)</div>
-        <div class="forecast-bodo-date" id="fc-dayafter-bodo">5 Aasin</div>
+        <div class="forecast-bodo-date" id="fc-dayafter-bodo">13 Aasin</div>
         <div class="forecast-eng-date" id="fc-dayafter-eng">23 Sep • Wed</div>
       </div>
     </div>
@@ -2057,6 +2061,13 @@
     const WEEKDAYS_ENG = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const ENG_MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+    // Assamese Panjika live reference for the current 2026 cycle.
+    // Names are intentionally kept in English/Bodo transliteration; no Assamese script is rendered.
+    const ASSAMESE_SOLAR_EVENTS_2026 = {
+      "9-26": { event: "Anvadhan • Assamese Panjika", puja: "Purnima observance", reason: "Assamese calendar observance", custom: "Ahin 9, 1433 • Shukla Purnima" },
+      "9-27": { event: "Ishti • Assamese Panjika", puja: "Daily Panjika observance", reason: "Assamese calendar observance", custom: "Ahin 10, 1433 • Krishna Pratipada" }
+    };
+
     // KNOWLEDGE BASE: Assam & Bodo Cultural Calendar & Official Holidays
     const CALENDAR_INTELLIGENCE_2026 = {
       // Month: 1 (Jan)
@@ -2414,6 +2425,25 @@
     }
 
     // Date Calculation Engine
+    function getAssameseSolarReference(dateObj) {
+      const gMonth = dateObj.getMonth() + 1;
+      const gDay = dateObj.getDate();
+      const starts = {1:15,2:14,3:16,4:15,5:16,6:16,7:17,8:18,9:18,10:18,11:17,12:17};
+      const names = {
+        1:"Magh",2:"Fagun",3:"Chot (Choitro)",4:"Bohag (Boishakh)",
+        5:"Jeth (Joishtho)",6:"Ahar (Asharh)",7:"Saon (Srabon)",
+        8:"Bhadra (Bhadro)",9:"Ahin (Aashin)",10:"Kati (Kartik)",
+        11:"Aghon (Ogrohaeon)",12:"Puh (Poush)"
+      };
+      const monthIndex = (gDay >= starts[gMonth]) ? gMonth : (gMonth === 1 ? 12 : gMonth - 1);
+      const startDay = starts[gDay >= starts[gMonth] ? gMonth : (gMonth === 1 ? 12 : gMonth - 1)];
+      const assameseDay = gDay >= startDay
+        ? gDay - startDay + 1
+        : new Date(dateObj.getFullYear(), gMonth - 1, 0).getDate() - startDay + 1 + gDay;
+      const assameseYear = (monthIndex >= 1 && monthIndex <= 9) ? dateObj.getFullYear() - 593 : dateObj.getFullYear() - 594;
+      return { name:names[monthIndex], day:assameseDay, year:assameseYear };
+    }
+
     function getBodoDate(dateObj) {
       const gYear = dateObj.getFullYear();
       const gMonth = dateObj.getMonth() + 1; // 1..12
@@ -2469,7 +2499,7 @@
         bDevName = m.dev;
       }
 
-      bYear = (gMonth > 4 || (gMonth === 4 && gDay >= 14)) ? (gYear - 593) : (gYear - 594);
+      bYear = (gMonth > 4 || (gMonth === 4 && gDay >= 15)) ? (gYear - 593) : (gYear - 594);
 
       return {
         bDay,
@@ -2493,14 +2523,16 @@
 
       const key = `${gMonth}-${gDay}`;
       const staticEvent = CALENDAR_INTELLIGENCE_2026[key];
+      const assameseEvent = ASSAMESE_SOLAR_EVENTS_2026[key];
 
-      if (staticEvent) {
+      if (staticEvent || assameseEvent) {
+        const sourceEvent = staticEvent || assameseEvent;
         return {
-          event: staticEvent.event,
-          schoolClosed: staticEvent.schoolClosed,
-          reason: staticEvent.reason,
-          puja: staticEvent.puja,
-          custom: staticEvent.custom,
+          event: sourceEvent.event,
+          schoolClosed: staticEvent ? staticEvent.schoolClosed : false,
+          reason: sourceEvent.reason,
+          puja: sourceEvent.puja,
+          custom: sourceEvent.custom,
           bDate: bDate
         };
       }
@@ -2614,6 +2646,13 @@
       document.getElementById('hero-bodo-year').textContent = `Bodo San ${bToday.bYear} • Swrwt Ritu (Autumn)`;
       document.getElementById('hero-eng-date').textContent = `${bToday.gDay} ${ENG_MONTH_NAMES[bToday.gMonth - 1]}`;
       document.getElementById('hero-eng-day').textContent = bToday.engWeekday;
+      const assameseNow = getAssameseSolarReference(today);
+      const sync = document.getElementById('live-calendar-sync-text');
+      if (sync) {
+        sync.textContent = 'English: ' + bToday.gDay + ' ' + ENG_MONTH_NAMES[bToday.gMonth - 1] +
+          ' • Bodo: ' + bToday.bMonthName + ' ' + bToday.bDay +
+          ' • Assamese Solar: ' + assameseNow.name + ' ' + assameseNow.day + ', ' + assameseNow.year;
+      }
 
       // 3-Day Forecast
       const fc1 = getBodoDate(today);
